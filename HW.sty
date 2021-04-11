@@ -1,0 +1,120 @@
+% \documentclass{article}
+\ProvidesClass{HW}
+\usepackage[utf8]{inputenc}
+\usepackage{import}
+\usepackage{amsmath, mathtools}
+\usepackage{amssymb}
+\usepackage{authblk}
+\usepackage{tabto}
+\usepackage[margin=1in]{geometry}
+\usepackage[inline,shortlabels]{enumitem}
+\usepackage[ruled]{algorithm2e}
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{placeins}
+\RequirePackage{environ}
+\RequirePackage{xifthen}
+\usepackage{float}
+\usepackage[most]{tcolorbox}
+\tcbset{parbox=false}
+
+\parindent 0in
+\parskip 1em
+
+\makeatletter
+% we use \prefix@<level> only if it is defined
+\renewcommand{\@seccntformat}[1]{%
+  \ifcsname prefix@#1\endcsname
+    \csname prefix@#1\endcsname
+  \else
+    \csname the#1\endcsname\quad
+  \fi}
+% define \prefix@section
+\newcommand\prefix@section{}
+\makeatother
+
+\title{Insert Title Here}
+\author{TANUWIJAYA, Randy Stefan \\ (20582731) \\ rstanuwijaya@connect.ust.hk}
+\affil{Department of Physics - HKUST \\ Department of Computer Science and Engineering - HKUST}
+\date{\today}
+
+% \tagthis command for align* environment
+\newcommand\tagthis{\addtocounter{equation}{1}\tag{\theequation}}
+\newcounter{solequation}[section]
+\renewcommand{\thesolequation}{S\thesection.\arabic{solequation}}
+\newcommand\tagsol{\addtocounter{solequation}{1}\tag{\thesolequation}}
+
+
+% Useful operators
+\newcommand{\combination}[2]{
+\begin{pmatrix}
+    #1 \\ #2
+\end{pmatrix}
+}
+
+\makeatletter
+\newcommand{\@giventhatstar}[2]{\left(#1\;\middle|\;#2\right)}
+\newcommand{\@giventhatnostar}[3][]{#1#2\;#1|\;#3#1}
+\newcommand{\giventhat}{\@ifstar\@giventhatstar\@giventhatnostar}
+\makeatother
+
+\newcommand{\pbracket}[1]{\left(#1\right)}
+\newcommand{\cbracket}[1]{\left\{#1\right\}}
+\newcommand{\kbracket}[1]{\left<#1\right>}
+
+
+\newcommand{\qed}{\quad \text{(Q.E.D)}}
+
+% declare floor and ceil brackets
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+
+\makeatletter
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+                                    {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                    {1ex}%
+                                    {\normalfont\Large\bfseries Problem \thesection: }}
+\makeatother
+
+\usepackage[shortlabels]{enumitem}
+\setenumerate[1]{label=(\alph*)}
+\setenumerate[2]{label=(\roman*)}
+
+\SetKw{KwAnd}{and}
+\SetKw{KwDo}{do}
+\SetKw{KwSwap}{swap}
+\SetKw{KwWith}{with}
+\SetKw{KwAppend}{append}
+\SetKw{KwLet}{let}
+\SetKw{KwThen}{then}
+\SetKw{KwIf}{if}
+\SetKw{KwIs}{is}
+\SetKw{KwIn}{in}
+\SetKw{KwDownTo}{down to}
+
+\newcommand{\sbracket}[1]{\left[#1\right]}
+\newcommand{\Swap}[2]{\KwSwap #1 \KwWith #2}
+\newcommand{\Append}[2]{\KwAppend #1 \KwTo #2}
+
+\usepackage{forest}
+\usepackage{caption}
+\forestset{%
+  tree/.style={
+    for tree={
+      circle,
+      draw,
+      s sep'+=10pt,
+      fit=band,
+      minimum size=2em,
+    },
+  },
+  bl/.style={draw=none, no edge},
+}
+\usepackage{subfigure}
+\usepackage{array}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usetikzlibrary{decorations.pathreplacing,calligraphy}
+\usetikzlibrary{patterns}
+\usetikzlibrary{math}

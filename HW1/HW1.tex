@@ -1,0 +1,285 @@
+\documentclass{article}
+\usepackage{../HW}
+
+\title{COMP3711 Assignment 1}
+
+\begin{document}
+
+\maketitle
+
+\begin{section}{Proof of Recurrence Simplification}
+Recall the recurrence:
+\begin{equation}
+    \forall n > 1, \quad T(n) \leq \pbracket{\floor*{\frac{n}{2}}} + T\pbracket{\ceil*{\frac{n}{2}}} + n \quad \text{and} \quad T(1) = 1
+\end{equation}
+
+\begin{enumerate}
+    \item Let $c > 0$ be some constant integer, Let $T(n)$ be a function satisfying:
+    \begin{equation}
+        \forall n > 2, \quad T(n) \leq T\left(\floor*{\frac{n}{3}}\right) + c \quad\text{and} \quad T(1) = T(2) = 1
+    \end{equation}
+    
+    \begin{enumerate}[(i)]
+        \item Prove using the expansion method that $T(3^k) = O(k)$
+        \begin{align*}
+            T(3^k) &\leq T(3^{k-1}) + c \quad
+            \leq T(3^{k-2}) + 2c \\ 
+            &\dots &\\
+            &\leq T(3^{k-k}) + kc \quad = T(1) + kc \\
+            &= 1 + kc \quad\leq 1 + kc' \quad \text{(let $c' = c + 1$, then for $k \geq 1$)} \\
+            &\leq k + kc = O(k) \qed
+        \end{align*}
+        \item Let $S(n)$ be some nondecreasing function of $n$. You are told that $S(n)$ also satisfies $S(3^k) = O(k)$. Prove that $S(n) = O(\log_3 n)$.
+        
+        \smallskip
+        $S(3^k) = O(k)$ implies $\exists c > 0 \land k_0$ s.t for $k > k_0$, $S(3^k) \leq ck$. Since $S(n)$ is nondecreasing, let $k_1 = \log_3 n + 1 \geq k_0$, then $T(n) \leq T(3^{k_1}) \leq c k_1 = c(\log_3 n  + 1) \leq 2c \log_3 n$. The last inequality requires $n \geq 3$. Thus, for $n > \max(3, 3^{k_0 - 1})$ and $c_1 = 2c$, $S(n) \leq c_1 \log_3 n = O(\log_3 n)$
+        
+        \item For all $n \geq 1$, set $R(n) = \max_{1 \leq i \leq n} T(i)$. Prove that
+        \begin{equation*}
+            \forall n > 1, \quad R(n) \leq R\pbracket{\floor*{\frac{n}{3}}} + c \tagsol
+        \end{equation*}
+        
+        Since $R(n) = \max_{1 \leq i \leq n} T(i)$ we have $T(n) \leq R(n)$ for all $n$. Combining with equation (2), we have:
+        \begin{align*}
+            T(i) &\leq T\left(\floor*{\frac{i}{3}}\right) + c \leq  R\left(\floor*{\frac{i}{3}}\right) + c \\
+            R(n) = \max_{1 \leq i \leq n} T(i) &\leq \max_{1 \leq i \leq n} R\left(\floor*{\frac{i}{3}}\right) + c \leq R\left(\floor*{\frac{n}{3}}\right) + c
+        \end{align*}
+        note that the last inequality holds due to the fact that $R(i)$ is a nondecreasing function.
+        
+        \item Using (i), (ii), and (iii), prove that if $T(n)$ satisfies Equation (2) then $T(n) = O(\log n)$
+        
+        First, note that $\forall n \geq  2, T(n) \leq R(n)$. Then, from (iii) and (i), we know that the upper bound of $T(n)$, which is $R(n)$ is a nondecreasing function and also upperbounded by $R(3^k) = O(k)$. Combining with the result from (ii). we proved that $R(n) = O(\log_3 n)$. Since $\forall n \geq 2, T(n) \leq R(n)$, $T(n) = O(\log_2 n)$. (QED)
+    \end{enumerate}
+    
+    \item If $T(n)$ satisfies Equation (1) then 
+    \begin{equation}
+        T(2^K) = O(k2^k)
+    \end{equation}
+    \begin{enumerate}
+        \item Let $S(n)$ be some nondecreasing function of $n$. You are told that $S(n)$ also satisfies $S(2^k) = O(k2^k)$. Prove that $S(n) = O(n\log_2 n)$.
+        
+        \smallskip
+        $S(2^k) = O(k2^k)$ implies $\exists c > 0 \land k_0$ s.t for $k > k_0$, $S(2^k) \leq ck2^k$. Since $S(n)$ is nondecreasing, let $k_1 = \log n + 1 \geq k_0$, then $T(n) \leq T(2^{k_1}) \leq c k_1 2^{k_1} = c n (\log n  + 1) \leq 2c n \log n$. The last inequality requires $n \geq 2$. Thus, for $n > \max(2, 2^{k_0 - 1})$ and $c_1 = 2c$, $S(n) \leq c_1 n \log n = O(n \log n)$.
+        
+        
+        \item For all $n \geq 1$, set $R(n) = \max_{1 \leq i \leq n} T(i)$. Prove that
+        \begin{equation*}
+            \forall n > 1, \quad R(n) \leq R\pbracket{\floor*{\frac{n}{2}}} + R\pbracket{\ceil*{\frac{n}{2}}} + c 
+        \end{equation*}
+        
+        Since $R(n) = \max_{1 \leq i \leq n} T(i)$ we have $T(n) \leq R(n)$ for all $n$. Combining with equation (2), we have:
+        \begin{align*}
+            T(i) &\leq T\pbracket{\floor*{\frac{i}{2}}} + T\pbracket{\ceil*{\frac{i}{2}}} + c \leq  R\pbracket{\floor*{\frac{i}{2}}} + R\pbracket{\ceil*{\frac{i}{2}}} + c \\
+            R(n) = \max_{1 \leq i \leq n} T(i) &\leq \max_{1 \leq i \leq n} R\pbracket{\floor*{\frac{i}{2}}} + R\pbracket{\ceil*{\frac{i}{2}}} + c \leq R\pbracket{\floor*{\frac{n}{2}}} + R\pbracket{\ceil*{\frac{n}{2}}} + c
+        \end{align*}
+        note that the last inequality holds due to the fact that $R(i)$ is a nondecreasing function.
+        
+        \item Using Equation (3), (v), and (vi), prove that $T(n)$ defined by Equation (1) satisfies $T(n) = O(n \log_2 n)$.
+        
+        First, note that $\forall n \geq  1, T(n) \leq R(n)$. Then, from (iii) and (i), we know that the upper bound of $T(n)$, which is $R(n)$ is a nondecreasing function and also upperbounded by $R(2^k) = O(k2^k)$. Combining with the result from (ii). we proved that $R(n) = O(n \log_2 n)$. Since $\forall n \geq 1, T(n) \leq R(n)$, $T(n) = O(n \log_2 n)$. (QED)
+    \end{enumerate}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Right-flipped Array Divide and Conquer}
+Let $A[1 \dots n]$ be an array with $n$ items. $A'$ is {\it array A right-flipped at k} with $1 \leq k \leq n$ if
+\begin{equation}
+    A'[i] = \begin{cases}
+    A[i] & \text{if $i < k$} \\
+    A[n + k -i] & \text{if $i \geq k$}
+    \end{cases}
+\end{equation}
+\begin{enumerate}
+    \item (i) Documented pseudocode with $O(\log n)$ time to return the value of $k$ \\
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \caption{Find-k(p, r)}
+            % \uIf{$p = r$ \tcc*{cover base case $n = 1$}}{
+            %     \KwRet{p}  
+            % }
+            \uIf{$r - p = 1$ \tcc*{cover base case $n = 2$}}{
+                \uIf{$A[p] >  A[p + 1]$}{\KwRet{p}}{\KwRet{p + 1}}
+            }
+            \uElse{
+                $q \gets \floor{(p + r)/2}$ \tcc*{find midpoint} 
+                \uIf(\tcc*[f]{if the midpoint is decreasing}){$A[q] > A[q+1]$}{
+                    Find-k(p, q)        \tcc*{recurse to left-half}
+                }
+                \uElse{
+                    Find-k(q, r)      \tcc*{otherwise, recurse to right-half}
+                }
+            }
+        \end{algorithm}
+        \end{minipage}
+       
+        (ii) For input right-flipped array $A[1 \dots n]$ at $k$ and $n \geq 2$. For the base case, $n = 2$, the flipping is either at 1 or 2. If $A[p] < A[p + 1]$, then the flipping is at $k = p + 1$. On the other hand, if $A[p] > A[p+1]$, then the flipping is at $k = p$.
+        
+        For general case $n > 2$, we find the flipping by divide and conquer method. First, define the midpoint as $q = \floor{(p + r)/2}$. Then, if the midpoint is decreasing $A[q] > A[q+1]$, we recurse to the left-half of the array (call Find-k(p, q)). Otherwise, if midpoint is increasing $A[q] < A[q+1]$, we recurse to the right-half of the array (call Find-k(q, r)). The algorithm eventually will terminate and return the flipping point $k$ when it reached the base case.
+        
+        \item Prove that the algorithm correctly returns the flipping point $k$.
+        
+        {\bf \underline{Base Cases:}} $n = 2$
+        \begin{enumerate}
+            \item {$\mathbf{A[p] >  A[p + 1]}:$} the algorithm correctly returns $k = p$
+            \item {$\mathbf{A[p] <  A[p + 1]}:$} the algorithm correctly returns $k = p+1$
+        \end{enumerate}
+        
+        {\bf \underline{General Cases:}} $n > 2$, assume $I(n')$ is true for all $1 \leq n' < n$ and suppose $r - p + 1 = n$. Let $q = \floor{(p + r)/2}$ as the midpoint of the array in the current recursive call. 
+        \begin{enumerate}
+            \item {$\mathbf{A[q] >  A[q + 1]}:$} Algorithm will call Find-k(p, q), which has size of $n' = \floor{(r-p)/2} + 1 < n$ and $n' \geq 2$. By the induction hypothesis it returns the correct answer.
+            \item {$\mathbf{A[q] <  A[q+ 1]}:$} Algorithm will call Find-k(q, r), which has size of $n' = \ceil{(r-p)/2} + 1 < n$ and $n' \geq 2$. By the induction hypothesis it returns the correct answer.
+        \end{enumerate}
+        
+        Thus, Find-k(p, q) always returns the correct answer and $I(m)$ is true for all $n \geq 2$.
+        
+        \item Derive recurrence relation of $T(n)$, the worst case number of comparisons performed by your algorithm on an array of size $n$, and explain why this recurrence relation implies $T(n) = O(\log n)$.
+        
+        \smallskip
+        The recurrence relation of Find-k(p, r) can be expressed as:
+        \begin{equation*}
+            \forall n \geq 2, T(n) = 
+                \begin{cases}
+                        T\pbracket{\floor*{\dfrac{n+1}{2}}} + 1 & \text{if $A[q]  > A[q+1]$} \\
+                        T\pbracket{\ceil*{\dfrac{n+1}{2}}} + 1 & \text{if $A[q] < A[q+1]$}
+                \end{cases}, \quad T(2) = 1 \tagsol
+        \end{equation*}
+        
+        The Find-k the reccurence relation follows $T(n) \leq T(n/2) + c$ for $c = 1$. Therefore, the worst case number of comparisons $T(n)$ is $O(\log n)$.
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Heavy Element in Array}
+Let $A$ be an array of $n$ elements. A {\em heavy element} of $A$ is any element that appears more than $2n/5$ times. Design an $O (n \log n)$ divide-and-conquer algorithm for finding the heavy items in an array. 
+
+\begin{enumerate}
+    \item (i) Documented pseudocode for a procedure {\em Heavy(i,j)} that returns the set of heavy items in subarray $A[i\dots j]$
+        
+        
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \caption{Heavy(i, j)}
+            \uIf{$j-i+1 = 1$}{
+                \KwRet{$\cbracket{A[i]}$}                                       \tcc*{Base case n=1}
+            }
+            \uElseIf{$j-i+1 = 2$}{
+                \KwRet{$\cbracket{A[i], A[i+1]}$}                               \tcc*{Base case n=2}
+            }
+            \uElse{
+                $m \gets \floor{(i+j)/2}$ \\
+                $S = \text{Heavy(i,m)} \cup \text{Heavy(m+1, j)}$               \tcc*{S is possible heavy elements}
+                $R = \emptyset$ \\
+                \ForAll{$x \in S$}{ 
+                    $count = \text{CountHeavy(x, i, j)}$                        \tcc*{count the number of x in A[i..j]}
+                    \uIf(\tcc*[f]{determine if x is Heavy in A[i..j]}){$count > 2(j-i+1)/5$}{                                 
+                        $R \gets R \cup \cbracket{x}$                           
+                    }
+                }
+                \KwRet{R}
+            }
+        \end{algorithm}
+        \end{minipage}
+        
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \caption{CountHeavy(x, i, j)}
+            $count \gets 0$ \\
+            \For{$k \gets$ i \KwTo $j$}{
+                \uIf{$A[k] = x$}{
+                    $count \gets count + 1$
+                }
+            }
+            \KwRet{count}                                                       \tcc*{return the number of x in A[i..j]}
+        \end{algorithm}
+        \end{minipage}
+        
+        (ii) Begin with the fact that the heavy element in $A$ must be the heavy element in either left-half subarray, right-half subarray, or both.
+        
+        The base case of the algorithm is when $n \in \cbracket{1, 2}$, where all of the element is heavy element.
+        
+        The general case is when $n > 2$, where we will apply the recursion. First, we identify the midpoint $m = \floor{(i+j)/2}$ of the array $A[i \dots j]$. Then using the fact we know before, the candidate of the heavy element in $A$ is the union of heavy element in left-half and right-half subarray, and store it as the set $S$. Then, check for every element of $S$, whether the count of that particular element in the array $A[i \dots j]$ exceed 40\% by calling CountHeavy(x, i, j). If so, store the element into $R$.
+        After checking for all the element in $S$, the algorithm return $R$, which is the set containing the heavy element in $A[i \dots j$
+        
+        The second algorithm, CountHeavy(x, i, j) simply count the number of $x$ in the array $A[i \dots j]$
+        
+        \item Prove the correctness of the algorithm
+        
+        {\bf \underline{Base Cases:}} $n \in \cbracket{1,2}$
+        \begin{enumerate}
+            \item $\mathbf{n = 1}$: The algorithm correctly returns $\cbracket{A[i]}$
+            \item $\mathbf{n = 2}$: The algorithm correctly returns $\cbracket{A[i], A[i+1]}$
+        \end{enumerate}
+        {\bf \underline{General Cases:}} $n > 2$, assume $I(n')$ is true for all $1 \leq n' < n$ and suppose $j - i + 1 = n$. Let $m = \floor{(i + j)/2}$ as the midpoint of the list in the $I(n)$ recursive call. From the induction, the algorithm will return $S = \text{Heavy(i, m)} \cup \text{Heavy(m+1, j)}$ as the possible heavy element in $A[i \dots j]$. Since all array may only have zero, one, or two heavy elements, it follows that $|S| \leq 4$. Then check for every element $x$ in $S$, whether it is a heavy element in $A[i \dots j]$, by counting the number of $x$ in $A[i \dots j]$ by calling the CountHeavy(x,i,j). If the count is greater than $2n/5$, then $x$ is the heavy element in $A[i \dots j]$ and append it to $R$. After checking for all $x$, return the $R$, which is the heavy element of $A[i \dots j]$. It also follows that $|R| \leq 2$.
+        
+        Therefore, Heavy(i, j) always correctly returns the heavy element in $A[i \dots j]$ and $I(n)$ is true for all $n \geq 1$.
+        
+        \item Let T(n) be the worst case of total operations of all types performed by your algorithm. Derive a recurrence relation for $T(n)$. Show that $T(n) = O (n \log n)$
+        
+        \begin{enumerate}
+            \item For the base case $n \in \cbracket{1, 2}$, $T(1) = T(2) = 1$ since the only operation is checking the length of the array.
+            \item For the general case $n > 2$, determining $S$ takes $T(\floor{n/2}) + T(\ceil{n/2}) + 4$ number of operations, for the recursive call and the set operation (recall the $|\text{Heavy(i,j)}| \leq 2$ ). To check the count of all $x$ in $S$, it takes at most $4n$ operation, as $|S| \leq 4$. Therefore, the recurrence relation of the algorithm is:
+            \begin{equation*}
+                \forall n \geq 1, \quad T(n) \leq T\pbracket{\floor*{\frac{n}{2}}} + T\pbracket{\ceil*{\frac{n}{2}}} + 4n; \quad T(1) = T(2) = 1; \tagsol
+            \end{equation*}
+            This recurrence relation implies $T(n) = O(n \log n)$ running time.
+        \end{enumerate}
+
+        
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Running time of Algorithm}
+For each pair of expressions $(A, B)$, indicate the most appropriate relation, whether $A$ is $O, \Omega, \Theta$ of B.
+
+\begin{enumerate}
+    \item $A = n^2 + n^2 \log n,        \quad B = 5n - 7n^3 + 2n^4, \quad \mathbf{A = O(B)}$
+    \item $A = \log_{100}((n + 100)!),  \quad B = \ln n^n;          \quad \mathbf{A = \Theta(B)}$
+    \item $A = (^3\sqrt{2})^{\frac{1}{\log_n 10}},      \quad B = 2^{\sqrt{3\log_2 n}} ;   \quad \mathbf{A = O(B)}$
+    \item $A = \sum_{i=1}^n k^3,        \quad B = 12 \times \binom{n}{4};         \quad \mathbf{A = \Theta(B)}$
+    \item $A = n^62^{n(\log n)^3},      \quad B = n^8 + 2021^{2020^{2019}};             \quad \mathbf{{A = \Omega(B)}}$
+    \item $A = \sum_{k=1}^n \frac{1}{k(k+1)},           \quad B = ln \sum_{k=1}^n \frac{1}{k}   \quad \mathbf{A = O(B)}$
+    \item $A = n(1 + (-1)^n),           \quad B = n(1 + (-1)^{n+1});                     \quad \text{\em \bf none of the relations is satisfied}$
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Asymptotic Upper Bounds}
+Give asymptotic upper bounds for $T(n)$ satisfying the following recurrences.
+
+\begin{enumerate}
+    \item $T(1) = 1; \quad T(n) = 6T(n/4) + n^2 \quad \text{for $n > 1$} $
+    \begin{align*}
+        T(n) &= 6T(n/4) + n^2 \\
+        &= 6(6T(n/4^2) + (n/4)^2) + n^2 \\
+        &= 6^2 T(n/4^2) + n^2 (1 + 6/4^2) \\
+        &= 6^2 (6T(n/4^3) + (n/4^2)^2) + n^2 (1 + 6/4^2) \\
+        &= 6^3 T(n/4^3) + n^2 (1 + 6/4^2 + (6/4^2) ^2) \\
+        &= 6^k T(n/4^k) + n^2 \sum_{i = 0}^{k-1}\pbracket{(6/16)^i} \\
+        & \text{Assume $n$ is a power of 4 and let $k = \log_4 n$, then $T(n/4^k) = T(1) = 1$.} \\
+        &= 6^{\log_4 n} + n^2 \sum_{i = 0}^{k-1}\pbracket{(6/16)^i} \\
+        &= n^{\log_4 6} + n^2 \times \frac{8}{5}\pbracket{1 - \pbracket{\frac{3}{8}}^{k-1}} \\ 
+        &\leq n^2 + n^2 \times \frac{8}{5} = \frac{13}{5}n \quad \text{for $n > 1$} \\
+        &= \mathbf{O(n^2)}
+    \end{align*}
+
+    \item $T(1) = 1; \quad T(n) = 9T(n/3) + n \quad \text{for $n > 1$}$
+    \begin{align*}
+        T(n) &= 9T(n/3) + n^2 \\
+        &= 9(9T(n/3^2) + n/3) + n \\
+        &= 9^2 T(n/3^2) + n (1 + 1/3) \\
+        &= 9^2 (9T(n/3^3) + n/3^2) + n (1 + 1/3 + 1/3^2) \\
+        &= 9^3 T(n/3^3) + n (1 + 1/3 + 1/3^2) \\
+        &= 9^k T(n/3^k) + n \sum_{i = 0}^{k-1}\pbracket{(1/3)^i} \\
+        & \text{Assume $n$ is a power of 3 and let $k = \log_3 n$, then $T(n/3^k) = T(1) = 1$.} \\
+        &= 9^{\log_3 n} + n \sum_{i = 0}^{k-1}\pbracket{(1/3)^i} \\
+        &= n^{\log_3 9} + n \times \frac{3}{2}\pbracket{1 - \pbracket{\frac{1}{3}}^{k-1}} \\ 
+        &= n^2 + n \times \frac{3}{2}\pbracket{1 - \pbracket{\frac{1}{3}}^{k-1}} \\ 
+        &\leq n^2 + n^2 \times \frac{3}{2} = \frac{5n^2}{2} \quad \text{for $n > 1$} \\
+        &= \mathbf{O(n^2)}
+    \end{align*}
+\end{enumerate}
+\end{section}
+
+\end{document}

@@ -1,0 +1,726 @@
+\documentclass{article}
+\usepackage{../HW}
+
+\title{COMP3711 Assignment 2}
+
+\begin{document}
+
+\maketitle
+
+\begin{section}{Recurrence Relations}
+
+Give asymptotic upper bounds for $T(n)$ satisfying the following recurrences.
+Make your bounds as tight as possible. For example, if $T(n) = \Theta(n^2)$ then
+$T(n) = O(n^2)$ is a tight upper bound but $T(n) = O(n^2 \log n)$ is not. Your
+upper bound should be written in the form $T(n) = O(n^\alpha(\log n)^\beta)$ where  
+$\alpha, \beta$ are appropriate constants.
+
+\begin{enumerate}
+    \item $T(1) = 1$; $T(n) = 8T(n/2) + n^2  \sqrt{n}$ for $n > 1$ \\
+    Let $c = \log_2 8 = 3$ and $f(n) = n^2 \sqrt{n} = O(n^3)$. Since $f(n) = O(n^{c-\epsilon})$ for some $\epsilon > 0$, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(n^c) = \Theta (n^3) = O(n^3)}$
+    
+    \item $T(1) = 1$; $T(n) = 5T(n/2) + n^3 \log_2 n$ for $n > 1$ \\
+    Let $c = \log_2 5 < 3$ and $f(n) = n^3 \log_2 n = \Omega(n^3)$. Since $f(n) = \Omega(n^{c+\epsilon})$ for some $\epsilon > 0$ and the smoothness condition is satisfied, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(f(n)) = \Theta (n^3 \log n) = O(n^3 \log n)}$
+    
+    \item $T(1) = 1$; $T(n) = 3T(n/4) + \sum_{i=1}^n i$ for $n > 1$\\
+    Let $c = \log_4 3 < 1$ and $f(n) = (n^2 + n)/2 = \Omega(n)$. Since $f(n) = \Omega(n^{c+\epsilon})$ for some $\epsilon > 0$ and the smoothness condition is satisfied, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(f(n)) = \Theta (n^2) = O(n^2)}$
+
+    \item $T(1) = 1$; $T(n) = 5T(n/4) + 1$ for $n > 1$\\
+    Let $c = \log_4 5 > 1$ and $f(n) = 1 = O(n)$. Since $f(n) = O(n^{c-\epsilon})$ for some $\epsilon > 0$, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(n^c) = \Theta (n^{\log_4 5}) = O(n^{\log_4 5})}$
+
+    \item $T(1) = 1$; $T(n) = 2T(n/7) + 2^{\log_7 n}$ for $n > 1$\\
+    Let $c = \log_7 2 > 1$ and $f(n) = 2^{\log_7 n} = n^{\log_7 2}$. Since $f(n) = \Theta(n^c)$, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(n^c \log n) = \Theta (n^{\log_7 2} \log n) = O (n^{\log_7 2} \log n)}$
+
+    \item $T(1) = 1$; $T(n) = 49T(n/7) + \log_3 (n!)$ for $n > 1$\\
+    Let $c = \log_7 49 = 2$ and $f(n) = \log_3 (n!) = \Theta(n \log n) = O(n^2)$. Since $f(n) = O(n^{c - \epsilon})$ for some $\epsilon > 0$, then by {\em Master Theorem}, $\boxed{T(n) = \Theta(n^c) = \Theta (n^2) = O (n^2)}$
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Monotone Matrices}
+An $N \times N$ matrix is \em{monotone} if each of its rows and columns are sorted in nondecreasing order. Given monotone matrix $A$ and value $a$, the \em{membership problem} is to test whether $a \in A$ or $a \notin A$.
+
+More specifically $MEM(a; m_1; n_1; m_2; n_2)$ will return {\tt TRUE} if there exist $i, j$such that $a = A[i, j]$ where $m_1 \leq i \leq m_2$ and $n_1 \leq j \leq n_2$ and {\tt FALSE} otherwise.
+
+\begin{enumerate}
+    \item Prove that this algorithm (i) terminates and (ii) correctly solves the membership problem for monotone matrices.
+    
+    {\bf \underline{Base Cases:}} $\Delta m = \{0, 1\} \cap \Delta n = \{0, 1\}$
+    \begin{enumerate}
+        \item {$\mathbf{a \in A[m_1..m_2, n_1..n_2]}:$} the algorithm correctly returns {\tt TRUE} and terminates
+        \item {$\mathbf{a \notin A[m_1..m_2, n_1..n_2]}:$} the algorithm correctly returns {\tt FALSE} and terminates 
+    \end{enumerate}
+    
+    {\bf \underline{General Cases:}} $\Delta m > 1 \cup \Delta n > 1$, assume $I(\Delta m', \Delta n')$ is true for all $1 \leq \Delta m' < \Delta m, 1 \leq \Delta n' < \Delta n$. Let $u = \floor{(m_1 + m_2)/2}$ and $v = \floor{(n_1 + n_2)/2}$ as the midpoint of the array for the first and second axes in the current recursive call. First assume if $a$ is in $A$:
+    \begin{enumerate}
+        \item Check if $a$ is in the lower-left submatrix by calling $Mem(a, u, m_2, n_1, v)$. By the induction hypothesis, the checking returns the correct answer. The algorithm correctly returns {\tt TRUE} and terminates if $a$ is in the lower-left. 
+        \item Check if $a$ is in the upper-right submatrix by calling $Mem(a, m_1, u, v, n_2)$. By the induction hypothesis, the checking returns the correct answer. The algorithm correctly returns {\tt TRUE} and terminates if $a$ is in the upper-right. 
+        \item {$\mathbf{a \leq A[u,v]}:$} and $a$ is not in the lower-left and upper-right submatrices, then $a$ must be in the upper-left submatrix. Algorithm will call $Mem(a, m_1, n_1, u, v)$. By the induction hypothesis, the checking returns the correct answer. The algorithm correctly returns {\tt TRUE} and terminates.
+        \item {$\mathbf{a > A[u,v]}:$} and $a$ is not in the lower-left and upper-right submatrices, then $a$ must be in the lower-right submatrix. Algorithm will call $Mem(a, u; b, m_2, n_2)$. By the induction hypothesis, the checking returns the correct answer. The algorithm correctly returns {\tt TRUE} and terminates.
+    \end{enumerate} 
+    Otherwise, if $a$ is not in $A$, the algorithm will correctly returns {\tt FALSE} and terminates.
+    
+    Thus, $MEM(a, m_1, m_2, n_1, n_2)$ always terminates and returns the correct answer. The induction hypothesis $I(\Delta m, \Delta n)$ is true for all $\Delta m, \Delta n \geq 0$.
+    
+    \item Show that without monotonicity, the algorithm might not be correct. To do this, give an example of a $5 \times 5$ non-monotone matrix $A$ and value $a$ such that $a \in A$ but $MEM(a, 1, 1, 5, 5)$ would return false.
+    
+    For example, take $A$ to be:
+    \begin{align*}
+        A = \begin{pmatrix}
+        25 & 24 & 23 & 22 & 21 \\
+        20 & 19 & 18 & 17 & 16 \\
+        15 & 14 & 13 & 12 & 11 \\
+        10 & 9  & 8  & 7  & 6  \\
+        5  & 4  & 3  & 2  & 1  \\
+        \end{pmatrix}
+    \end{align*}
+    and $a = 25$. The algorithm will first check the lower-left and upper-right submatrices, and then check the lower-right submatrices (since $25 > 13$), returns {\tt FALSE} and terminates. 
+    
+    \item Analyze, from scratch (no use of other theorems allowed) the running time of the algorithm when run on an $N \times N$ monotone matrix, i.e., when $MEM(a, 1, 1, N, N)$ is called.
+    
+    Let T(N) be the number of comparison needed for an array with size of $N \times N$, where $N = 2^k + 1$ The recurrence relation is given by: 
+    \begin{align*}
+        T(1) = T(2) = 1, \quad T(N) \leq 3T\pbracket{\ceil*{\frac{N}{2}}} + 1
+    \end{align*}
+    The recurrence relation can be explained as following. The base case is when the array size is either $N \in \{1,2\}$, in which the algorithm runs a constant number of comparison. In the general case, the worst scenario of the algorithm is when it needs to check three out of four submatrices - where $a$ is not in the lower-left or upper right submatrix. In this case, the algorithm checks lower-left and upper-left submatrices, in addition to either upper-left ($a \leq A[u,v]$) or lower-right ($a > A[u,v]$) submatrix, with a single  comparison. The asymptomatic upper bound of the algorithm running time is given by:
+    
+    \begin{align*}
+        T(n) &= 3T(\ceil{n/2}) + 1 \\
+        &= 3(3T(\ceil{n/2^2}) + 1) + 1 \\
+        &= 3^2 T(\ceil{n/2^2}) + (1 + 3) \\
+        &= 3^2 (3T(\ceil{n/2^3}) + 1) + (1 + 3) \\
+        &= 3^3 T(\ceil{n/2^3}) + (1 + 3 + 3^2) \\
+        &= 3^{k} T(\ceil{n/2^{k}}) + \sum_{i = 0}^{k-1}\pbracket{3^i} \\
+        & \text{Assume $n = 2^k + 1$, then $T(\ceil{n/2^{k}}) = T(2) = 1$.} \\
+        &= 3^{k} + \sum_{i = 0}^{k-1}\pbracket{3^i} \\
+        &= 3^{k} + \pbracket{\frac{3^{k}-1}{3-1}} \\ 
+        &\leq 3^k + 3^k \times \frac{1}{2} = \frac{3}{2}3^k = \frac{3}{2}3^{\log_2 n} = \frac{3}{2}n^{\log_2 3} \quad \text{for $n > 1$} \\
+     \Aboxed{T(n) &= O(n^{\log_2 3}) \approx O(n^{1.585})}
+    \end{align*}
+\end{enumerate}
+\end{section}
+\newpage
+
+\begin{section}{Selection}
+Recall the Selection problem. {\em Given an array $A[1 \dots n]$ of $n$ unsorted values and an integer $k \leq n$, return the (index of the) $k^{th}$ smallest item in $A$}
+
+In class you learned a simple $O(n)$ randomized algorithm for solving Selection. A (more complicated) $O(n)$ time worst-case Selection algorithm also exists.
+
+For this problem, assume that you are given a black-box procedure for implementing this worst-case $O(n)$ selection algorithm. That is, given an array $A[p \dots r]$, $p < r$ and $k$, $BB(A, p, r, k)$ finds and reports the index of the $k^{th}$ smallest item in $A[p, \dots r]$ in $O(r - p + 1)$ time.
+
+\begin{enumerate}
+    \item  Show how, using Selection as a subroutine, Quicksort can be modified to run in $O(n log n)$ worst-case time.
+    
+    \begin{enumerate}
+        \item Provide documented pseudocode for your $O(n \log n)$ worst-case time Quicksort. Your new Quicksort pseudocode can call the black-box $BB(A, p, r, k)$ procedure as often as it wants.
+        
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \SetKwFunction{Qsort}{Qsort}
+        \SetKwFunction{BB}{BB}
+        \SetKwFunction{Partition}{Partition}
+        \caption{Qsort(A, p, r)}
+            \eIf(\tcp*[f]{base case and invalid parameters}){$p \geq r$}{\KwRet}
+            {
+                $q \gets \floor{\frac{p+r}{2}}$ \tcp*{get the index of midpoint}
+                \Swap{$A[q]$}{A[\BB{A, 1, n, q}]} \\
+                \Partition{A, p, r} \tcp*{Partition around the midpoint}
+                \Qsort{A, p, q-1} \tcp*{Recursively sort the left subarray}
+                \Qsort{A, q+1, r} \tcp*{Recursively sort the right subarray}
+            }
+        \end{algorithm}
+        \end{minipage}
+        
+        \item Explain why the psuedocode runs in $O(n \log n)$ worst-case time.
+        
+        It runs on $O(n \log n)$ time since we can always use $BB$ to find the pivot point in the middle of the array, thus the submatrices are always symmetric. The reccurence relation of the worst-case running time of this algorithm would be similar to Merge Sort algorithm, which is $O(n \log n)$.
+    \end{enumerate}
+    
+    \item Find a good algorithm for reporting the $k$ middle items in the array in sorted order. The middle $k$ items are item $\floor{\frac{n-k}{2}} + 1$ to item $\floor{\frac{n+k}{2}}$. Use the black-box selection procedure to design an algorithm that is never worse (and sometimes better) than $\Theta (n \log n)$. In particular, for all $k \leq \frac{n}{\log_2 n}$, your algorithm should run in $\Theta(n)$ time. Algorithms that do not satisfy this last condition will be considered wrong.
+    
+    \begin{enumerate}
+        \item Provide documented pseudocode for your algorithm.
+        
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \SetKwFunction{MergeSort}{MergeSort}
+        \SetKwFunction{Partition}{Partition}
+        \SetKwFunction{BB}{BB}
+        \caption{k-select(A, n, k)}
+            $lb \gets \floor{\frac{n-k}{2}} + 1$, $ub \gets \floor{\frac{n+k}{2}}$  \tcp*{calculate the lower and upper bounds}
+            $id_{lb} \gets \BB{A, 1, n, lb}$ \tcp*{get the index of the lower bound-th item}
+            \Swap{$A[n]$}{$A[id_{lb}]$}\\
+            \Partition{A, 1, n} \\
+            $id_{ub} \gets \BB{A, 1, n, ub}$ \tcp*{get the index of the upper bound-th item}
+            \Swap{$A[n]$}{$A[id_{ub}]$} \\
+            \Partition{A, 1, n}\\
+            
+            \tcp{the item between lower and upper bounds are the desired item, but unsorted - use MergeSort to sort the items}
+            \MergeSort{A, lb, ub}\\
+            \KwRet $A[lb \dots ub]$
+        \end{algorithm}
+        \end{minipage}
+        
+        \item  State the running time of your new procedure as tightly as possible in terms of both $n$ and $k$. Explain why the pseudocode runs in that time.
+        
+        The running time of the algorithm is $O(n + k \log k)$. Finding the lower-bound $lb$ and the upper bound $ub$ takes $O(n)$ time. 
+        % Checking for every element in $A$ is within the bounds and appending to $B$ takes $O(n)$ time. Sorting the new array $B$ takes $O(k \log k)$ time as the size of $B$ is $k$. 
+        Calling partition function takes $O(n)$ time, and calling $MergeSort$ to get the sorted array with size of $k$ takes $O(k \log k)$ time.
+        Therefore, the total running time is $O(n + k \log k)$
+    \end{enumerate}
+    
+    \item Show how to use a solution to the Tierce problem to solve the Selection problem.
+
+    The Tierce problem is to find the index of the $\frac{1}{3}$’rd item in the array,  i.e., the index that would be returned by $BB(A, p, r, \floor{\frac{r-p+1}{3}})$. 
+    
+    Suppose that you lost the code for $BB(A, p, r, k)$ but were given a new black box for solving $Tierce(A, p, r)$ in $O(r - p + 1)$ worst case time. Show how, using $Tierce(A, p, r)$ as a subroutine, you can write a new linear time Selection algorithm.
+    
+    \begin{enumerate}
+        \item Provide documented pseudocode for your algorithm.
+        
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \SetKwFunction{SelectTierce}{SelectTierce}
+        \SetKwFunction{Tierce}{Tierce}
+        \SetKwFunction{Partition}{Partition}
+        \caption{SelectTierce(A, p, r, k)}
+            $tb \gets \floor{\frac{r-p + 1}{3}}$ \tcp*{get the tierce bound}
+            $id_{tb} \gets \Tierce{A, p, r}$ \tcp*{get the index of the 1/3'th item}
+            \eIf(\tcp*[f]{base case}){$tb =k$}{
+                \KwRet $tb$
+                }{
+                \Swap{$A[r]$}{$A[id_{tb}]$} \\
+                $j \gets \Partition{A, p, r}$ \\
+                \tcp{the array now partitioned around the pivot (tb-th item)}
+                \eIf(\tcp*[f]{recursive step}){$j < k$}{
+                    \KwRet $\SelectTierce{A, p, q, k}$
+                }{
+                    \KwRet $\SelectTierce{A, q+1, r, k - tb}$
+                }
+            }
+        \end{algorithm}
+        \end{minipage}
+        
+        \item Explain why your algorithm is correct.
+        
+        The base case is for $n = 1$ and the algorithm correctly returns the only item in the array. The inductive hypothesis $I(n')$ as the algorithm correctly returns the $k'$th item for all $n' < n$. 
+        
+        Let the {\em Tierce Bound} $tb$ as $tb = \floor{\frac{r-p + 1}{3}}$ and $A[id_{tb}]$ as the $\frac{1}{3}$'th item on the array. For $n = 2$
+        
+        If $k = tb$, the algorithm correctly returns the index of the $k$'th item. Otherwise, by calling the partition with pivot around the $A[id_{tb}]$, all the item less than or equal to the $A[id_{tb}]$ will be positioned on the left, and all the item greater than $A[id_{tb}]$ will be positioned on the right. If $k < tb$, then the elements to be selected must be positioned on the left of the pivot, and the algorithm will correctly return the index by the induction hypothesis. Conversely, if $k > tb$, the algorithm also returns the correct answer by the induction hypothesis. 
+        
+        Thus, the algorithm is correct and $I(n)$ holds for all $n \geq 1$.
+        
+        \item Prove that it runs in $O(r - p + 1)$ worst case time.
+        
+        Note that the worst case is when the the algorithm is used to search the maximum ($n$'th) item in an array. The recurrence relation is given by:
+        \begin{align*}
+            T(1) = 1, \quad T(n) \leq T(2n/3) + O(n) \quad \Rightarrow{} \quad \boxed{T(n) = O(n)}
+        \end{align*}
+        The last equality holds by applying Master's Theorem for inequalities for $c = 0$ and $f(n) = \Omega(n^{c+\epsilon})$ for some $\epsilon > 0$ (satisfying smoothness condition).
+    \end{enumerate}
+\end{enumerate}
+\end{section}
+\newpage
+
+\begin{section}{Sorting}
+\begin{enumerate}
+    \item (Radix Sort) \\
+    You are given a set of 10 decimal integers in the range of 1 to 65535:
+    $$
+    A = [23825, 29914, 14359, 39515, 62095, 49896, 63678, 37642, 40263, 52107]
+    $$
+    
+    \begin{enumerate}
+        \item Please conduct Radix Sort on A using Base 10. Illustrate your result after each step following the worked example on Page 35 in the 08 Linearsort lecture slides.
+        
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{|c||c|c|c|c|c|c|}
+                \hline 
+                index & $A$ & $A^{(1)}$ & $A^{(2)}$ & $A^{(3)}$ & $A^{(4)}$ & $A^{(5)}$ \\
+                \hline
+                 1 & 23825 & 37642 & 52107 & 62095 & 40263 & 14359 \\
+                 2 & 29914 & 40263 & 29914 & 52107 & 62095 & 23825 \\
+                 3 & 14359 & 29914 & 39515 & 40263 & 52107 & 29914 \\
+                 4 & 39515 & 23825 & 23825 & 14359 & 63678 & 37642 \\
+                 5 & 62095 & 39515 & 37642 & 39515 & 23825 & 39515 \\
+                 6 & 49896 & 62095 & 14359 & 37642 & 14359 & 40263 \\
+                 7 & 63678 & 49896 & 40263 & 63678 & 37642 & 49896 \\
+                 8 & 37642 & 52107 & 63678 & 23825 & 39515 & 52107 \\
+                 9 & 40263 & 63678 & 62095 & 49896 & 49896 & 62095 \\
+                10 & 52107 & 14359 & 49896 & 29914 & 29914 & 63678 \\
+                \hline
+            \end{tabular}
+            \caption{Radix Sort of $A_{10}$}
+            \label{tab:Radix Sort}
+        \end{table}
+        
+        \item Now convert these decimal integers to hexadecimal and conduct Radix sort again, this time using Base 16. Illustrate your result after each step following the worked example on Page 35 in the 08 Linearsort lecture slides.
+        
+        $$
+        A_{16} = [{\tt 5D11, 74DA, 3817, 9A5B, F28F, C2E8, F8BE, 930A, 9D47, CB8B}]
+        $$
+        
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{|c||c|c|c|c|c|}
+                \hline 
+                index & $A$ & $A^{(1)}$ & $A^{(2)}$ & $A^{(3)}$ & $A^{(4)}$ \\
+                \hline
+                 1 & 5D11 & 5D11 & 930A & F28F & 3817 \\
+                 2 & 74DA & 3817 & 5D11 & C2E8 & 5D11 \\
+                 3 & 3817 & 9D47 & 3817 & 930A & 74DA \\
+                 4 & 9A5B & C2E8 & 9D47 & 74DA & 930A \\
+                 5 & F28F & 74DA & 9A5B & 3817 & 9A5B \\
+                 6 & C2E8 & 930A & CB8B & F8BE & 9D47 \\
+                 7 & F8BE & 9A5B & F28F & 9A5B & C2E8 \\
+                 8 & 930A & CB8B & F8BE & CB8B & CB8B \\
+                 9 & 9D47 & F8BE & 74DA & 5D11 & F28F \\
+                10 & CB8B & F28F & C2E8 & 9D47 & F8BE \\
+                \hline
+            \end{tabular}
+            \caption{Radix Sort of $A_{16}$}
+            \label{tab:Radix Sort 16}
+        \end{table}
+    \end{enumerate}
+    
+    \item (Heapsort)
+    Apply Heapsort on an initial input array $A = [84, 22, 19, 57]$. Illustrate the heap after each step following the worked example in 07a\_Example\_Heapsort slides.
+    
+    The output of the heapsort algorithm $A'$ is given by: $A' = [19, 22, 57, 84]$. Figure \ref{fig:heapsort} illustrates the insertion and extraction methods call on the temporary heap.
+    \newpage
+    
+    \begin{figure}[h!]
+    \centering
+    \begin{tabular}{C{.20\linewidth}C{.20\linewidth}C{.20\linewidth}C{.20\linewidth}}
+    \subfigure [Insert 84] {
+        \centering
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84
+            [, bl
+                [, bl]
+                [, bl]
+        ]
+            [,bl]
+        ]
+        \end{forest}
+        }
+    } & 
+    
+    \subfigure [Insert 22] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84
+            [22, red
+                [, bl]
+                [, bl]
+        ]
+            [,bl]
+        ]
+        \end{forest}
+        }
+    
+    } & 
+    
+    \subfigure [Insert 22] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [22
+            [84
+                [, bl]
+                [, bl]
+        ]
+            [,bl]
+        ]
+        \end{forest}
+        }
+    
+    } & 
+    
+    \subfigure [Insert 19] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [22
+            [84
+                [, bl]
+                [, bl]
+        ]
+            [19, red]
+        ]
+        \end{forest}
+        }
+    
+    } \\
+    
+    \end{tabular}
+    \begin{tabular}{C{.20\linewidth}C{.20\linewidth}C{.20\linewidth}}
+    \subfigure [Insert 19] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [19
+            [84
+                [, bl]
+                [, bl]
+        ]
+            [22]
+        ]
+        \end{forest}
+        }
+    
+    } & 
+    
+    \subfigure [Insert 57] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [19
+            [84
+                [57, red]
+                [, bl]
+        ]
+            [22]
+        ]
+        \end{forest}
+        }
+    } & 
+    
+    \subfigure [Insert 57] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [19
+            [57
+                [84]
+                [, bl]
+        ]
+            [22]
+        ]
+        \end{forest}
+        }
+    } \\
+    
+    \subfigure [Extract-Min 19] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [19, blue
+            [57
+                [84]
+                [, bl]
+        ]
+            [22]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 19] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84, red
+            [57
+                [, bl]
+                [, bl]
+        ]
+            [22]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 19] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [22
+            [57
+                [, bl]
+                [, bl]
+        ]
+            [84]
+        ]
+        \end{forest}
+        }
+    } \\
+    
+    \subfigure [Extract-Min 22] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [22, blue
+            [57
+                [, bl]
+                [, bl]
+        ]
+            [84]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 22] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84, red
+            [57
+                [, bl]
+                [, bl]
+        ]
+            [, bl]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 22] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [57
+            [84
+                [, bl]
+                [, bl]
+        ]
+            [, bl]
+        ]
+        \end{forest}
+        }
+    } \\
+    
+    \subfigure [Extract-Min 57] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [57, blue
+            [84
+                [, bl]
+                [, bl]
+        ]
+            [, bl]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 57] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84
+            [, bl
+                [, bl]
+                [, bl]
+        ]
+            [, bl]
+        ]
+        \end{forest}
+        }
+    } &
+    
+    \subfigure [Extract-Min 84] {
+        \resizebox{\linewidth}{!}{
+        \begin{forest}
+        tree
+        [84, blue
+            [, bl
+                [, bl]
+                [, bl]
+        ]
+            [, bl]
+        ]
+        \end{forest}
+        }
+    } \\
+    \end{tabular}
+    
+    \caption{Heapsort Illustration \\ $A = [84, 22, 19, 57]$, $A' = [19, 22, 57, 84]$}
+    \label{fig:heapsort}
+    \end{figure}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Decision Trees}
+    Recall that a comparison-based sorting algorithm can be represented in the (binary) decision tree model.
+
+    Following the worked example of Tutorial SS13, expand the subtree T2 of the decision tree for sorting a list of four items $a_1, a_2. a_3. a_4$ using Quicksort with the last item as pivot.
+    
+    From the parents of $T_2$ node in the decision tree, we know that there are two sets of sorted lists in the array, which are $\cbracket{a_1, a_4}$ and $\cbracket{a_4, a_2}$. These two expressions also imply $\cbracket{a_1, a_4, a_2}$. Now, the decision tree $T_2$ just need to merge the sorted list $\cbracket{a_1, a_4, a_2}$ with $a_3$. Figure \ref{fig:decisiontree} illustrates the decision tree of $T_2$
+    
+    \begin{figure}[h]
+        \centering
+        \begin{forest}
+        [T2, dashed, fill = gray, regular polygon, regular polygon sides = 3, draw
+            [$a_3 : a_4$, circle, draw, s sep+=3mm
+                [$a_1 : a_3$, circle, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$\leq$}}, l sep+=3mm, s sep+=3mm
+                    [$\cbracket{a_1, a_3, a_4, a_2}$, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$\leq$}}]
+                    [$\cbracket{a_3, a_1, a_4, a_2}$, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$>$}}]
+                ]
+                [$a_2: a_3$, circle, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$>$}}, l sep+=3mm, s sep+=3mm
+                    [$\cbracket{a_1, a_4, a_2, a_3}$, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$\leq$}}]
+                    [$\cbracket{a_1, a_4, a_3, a_2}$, draw, edge label={node[midway,sloped,above,font=\scriptsize]{$>$}}]
+                ]
+            ]
+        ]
+        \end{forest}
+        \caption{Decision Tree of $T_2$}
+        \label{fig:decisiontree}
+    \end{figure}
+\end{section}
+\newpage
+
+\begin{section}{Randomization}
+Let $A[1..n]$ be an array of $n$ distinct numbers. In class we said that if $i < j$ and $A[i] > A[j]$, then the pair $(i, j)$ is called an inversion of $A$. In Tutorial R5 we used indicator random variables to show that, if the elements of A form a uniform random permutation of $\kbracket{1, 2, \dots, n}$, then the expected number of inversions in $A$ is $\frac{n(n-1)}{4}$
+
+For this problem let $n \geq 2$ be an even number and assume that $A[1 \dots n]$ is initialized with $A[i] = i$.
+
+\begin{enumerate}
+    \item Now run the following random procedure on $A$:
+    
+    For every $i$, $1 \leq i \leq n/2$, swap the values in $A[i]$ and $A[\frac{n}{2} + i]$ with probability $\frac{1}{2}$ (and leave them unswapped with probability $\frac{1}{2}$.)
+    
+    Answer the following question:
+    what is the expected number of inversions in $A$ after running this swapping procedure? Show how you mathematically derived this answer.
+    
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}
+        
+        \tikzmath{\i = 2; \s = 0.5; \n = 5; \sh = 0.5;}
+        
+        % draw rectangle
+        \draw (0,0) rectangle (10,1);
+        
+        % center dash
+        \draw[dashed] (5,-0.3) -- (5,1.3);
+        \node at (5, 1.6) {$\frac{n}{2}$};
+        
+        % rectangles
+        \draw[gray, pattern=north west lines] (2,0) rectangle (2.5,1);
+        \draw[gray, pattern=north west lines] (5+2,0) rectangle (5+2.5,1);
+        
+        % labels partition lengths
+        \draw [decorate,
+        	decoration = {brace, mirror}] (0,-0.1) --  (2, -0.1);
+        \node at (1, -0.6) {$i-1$};
+        \draw [decorate,
+        	decoration = {brace, mirror}] (2.5,-0.1) --  (5, -0.1);
+        \node at (7.5/2, -0.6) {$\frac{n}{2}-i$};
+        
+        \draw [decorate,
+        	decoration = {brace, mirror}] (5+0,-0.1) --  (5+2, -0.1);
+        \node at (5+1, -0.6) {$i-1$};
+        \draw [decorate,
+        	decoration = {brace, mirror}] (5+2.5,-0.1) --  (5+5, -0.1);
+        \node at (5+7.5/2, -0.6) {$\frac{n}{2}-i$};
+        
+        % label partition names
+        
+        \node at (\i/2, \sh) {1};
+        \node at (\i/2 + \s/2 + \n/2, \sh) {2};
+        \node at (\i/2+ \n, \sh) {3};
+        \node at (\i/2 + \s/2 + \n/2 + \n, \sh) {4};
+        
+        % label A[i]
+        \node at (\i + \s/2, 1.5) {$A[i]$};
+        \node at (\i + \n + \s/2, 1.5) {$A[i+ \frac{n}{2}]$};
+        
+        \end{tikzpicture}
+        \caption{Partitions of the array}
+        \label{fig:random1}
+    \end{figure}
+    
+    Consider Figure \ref{fig:random1}, and note that there is equal probability of $A[i]$ being switched with $A[i + \frac{n}{2}]$ or not. For each case, there is equal probability of each pair of partitions ($(1,3)$ and $(2,4)$) will be switched or not. For simplicity, define $j = i + \frac{n}{2}$. Let $I(k, p)$ denote the number of inversions of $A[k]$ with the partition $p$, and $J(i, j) = 1$ if $i$ and $j$ is inverted, $0$ otherwise.
+    
+    \begin{itemize}
+        \item {\bf $A[i]$ is not switched}:
+        \begin{itemize}
+            \item {\bf Partitions are not switched}:
+                \begin{align*}
+                    I(i, 1) &= 0 & I(i, 2) &= 0 & I(i, 3) &= 0 & I(i, 4) &= 0 & J(i, j) &= 0\\
+                    I(j, 1) &= 0 & I(j, 2) &= 0 & I(j, 3) &= 0 & I(j, 4) &= 0 & J(j, i) &= 0
+                \end{align*}
+            \item {\bf Partitions are switched}:
+                \begin{align*}
+                    I(i, 1) &= i-1 & I(i, 2) &= 0 & I(i, 3) &= i-1 & I(i, 4) &= 0 & J(i, j) &= 0 \\
+                    I(j, 1) &= 0 & I(j, 2) &= \frac{n}{2}-i & I(j, 3) &= 0 & I(j, 4) &= \frac{n}{2}-i & J(j, i) &= 0
+                \end{align*}
+        \end{itemize}
+        \item {\bf $A[i]$ is switched}:
+        \begin{itemize}
+            \item {\bf Partitions are not switched}:
+                \begin{align*}
+                    I(i, 1) &= 0 & I(i, 2) &= \frac{n}{2}-i & I(i, 3) &= i-1 & I(i, 4) &= 0 & J(i, j) &= 1 \\
+                    I(j, 1) &= 0 & I(j, 2) &= \frac{n}{2}-i & I(j, 3) &= i-1 & I(j, 4) &= 0 & J(j, i) &= 1
+                \end{align*}
+            \item {\bf Partitions are switched}:
+                \begin{align*}
+                    I(i, 1) &= 0 & I(i, 2) &= 0 & I(i, 3) &= i-1 & I(i, 4) &= \frac{n}{2}-i & J(i, j) &= 1 \\
+                    I(j, 1) &= i-1 & I(j, 2) &= \frac{n}{2}-i & I(j, 3) &= 0 & I(j, 4) &= 0 & J(j, i) &= 1
+                \end{align*}
+        \end{itemize}
+    \end{itemize}
+    All cases have equal probability of $\frac{1}{4}$. Let $S = 3n-2$ as the sum of all the inversions calculated above. Then, by the linearity of expectation, the expected inversion number is given by:
+    \begin{align*}
+        E[\text{Inv}] = \frac{S}{4} \times \frac{n}{2} \times \frac{1}{2} = \boxed{\frac{n}{4} \pbracket{\frac{3}{4}n - \frac{1}{2}}}
+    \end{align*}
+    
+    The factor $1/4$ comes from the probability of each cases, $\frac{n}{2}$ comes from the loop condition, and $\frac{1}{2}$ comes from the fact that the inversion number obtained is double counted.
+
+    \item Now assume again that $A[1 \dots n]$ is initialized with $A[i] = i$ and run the following different random procedure on A:
+    
+    For every $i$, $1 \leq i \leq n/2$; swap the values in $A[i]$ and $A[n - i + 1]$ with probability $\frac{1}{2}$ (and leave them unswapped with probability $\frac{1}{2}$.)
+    
+    Answer the following question:
+    what is the expected number of inversions in $A$ after running this swapping procedure? Show how you mathematically derived this answer.
+    
+    Similar to the previous question, we can separate it into four equiprobable cases:
+    
+    \begin{itemize}
+        \item {\bf $A[i]$ is not switched}:
+        \begin{itemize}
+            \item {\bf Partitions are not switched}:
+                \begin{align*}
+                    I(i, 1) &= 0 & I(i, 2) &= 0 & I(i, 3) &= 0 & I(i, 4) &= 0 & J(i, j) &= 0\\
+                    I(j, 1) &= 0 & I(j, 2) &= 0 & I(j, 3) &= 0 & I(j, 4) &= 0 & J(j, 1) &= 0
+                \end{align*}
+            \item {\bf Partitions are switched}:
+                \begin{align*}
+                    I(i, 1) &= i-1 & I(i, 2) &= 0 & I(i, 3) &= 0 & I(i, 4) &= i-1 & J(i, j) &= 0 \\
+                    I(j, 1) &= i-1 & I(j, 2) &= 0 & I(j, 3) &= 0 & I(j, 4) &= i-1 & J(j, 1) &= 0
+                \end{align*}
+        \end{itemize}
+        \item {\bf $A[i]$ is switched}:
+        \begin{itemize}
+            \item {\bf Partitions are not switched}:
+                \begin{align*}
+                    I(i, 1) &= 0 & I(i, 2) &= \frac{n}{2}-i & I(i, 3) &= \frac{n}{2}-i & I(i, 4) &= 0 & J(i, j) &= 1 \\
+                    I(j, 1) &= 0 & I(j, 2) &= \frac{n}{2}-i & I(j, 3) &= \frac{n}{2}-i & I(j, 4) &= 0 & J(j, i) &= 1
+                \end{align*}
+            \item {\bf Partitions are switched}:
+                \begin{align*}
+                    I(i, 1) &= i-1 & I(i, 2) &= \frac{n}{2}-i & I(i, 3) &= \frac{n}{2}-i & I(i, 4) &= i-1 & J(i, j) &= 1 \\
+                    I(j, 1) &= i-1 & I(j, 2) &= \frac{n}{2}-i & I(j, 3) &= \frac{n}{2}-i & I(j, 4) &= i-1 & J(j, i) &= 1
+                \end{align*}
+        \end{itemize}
+    \end{itemize}
+    All cases have equal probability of $\frac{1}{4}$. The sum of inversions obtained from the calculation above is $S = 4n-4$. By the linearity of expectation, the expected inversion number is given by:
+    \begin{align*}
+        E[\text{Inv}] = \frac{S}{4} \times \frac{n}{2} \times \frac{1}{2} = \boxed{\frac{n}{4} \pbracket{n - 1}}
+    \end{align*}
+    
+    Where the factor $1/4$ comes from the probability of each cases, $\frac{n}{2}$ comes from the loop condition, and $\frac{1}{2}$ comes from the fact that the inversion number obtained is double counted.
+    \end{enumerate}
+\end{section}
+\end{document}
+
+

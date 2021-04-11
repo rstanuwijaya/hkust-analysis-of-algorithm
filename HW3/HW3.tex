@@ -1,0 +1,1254 @@
+\documentclass{article}
+\usepackage{../HW}
+\numberwithin{table}{section}
+\numberwithin{figure}{section}
+
+\title{COMP3711 Assignment 3 - Double Sized Homework}
+\begin{document}
+
+\maketitle
+\begin{section}{Huffman Coding}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        $i$ & 1 & 2 & 3 & 4 & 5 & 6 & 8 & 8 & 9 & 10 & 11 & 12& 13 & 14 & 15  \\
+        \hline
+        $a_i$ & a & b & c & d & e & f & g & h & i & j & k & l & m & n & o \\
+        \hline
+        $f(a_i)$ & 36 & 6 & 9 & 10 & 58 & 7 & 17 & 29 & 45 & 2 & 3 & 12 & 15 & 26 & 28 \\
+        \hline
+    \end{tabular}
+    \caption{Frequency Distribution}
+    \label{tab:p1}
+\end{table}
+The table above lists a vocabulary of 15 characters ($a$ to $o$) and their frequencies in a document. Apply Huffman coding to construct an optimal codebook. Your solution should contain three parts:
+\begin{enumerate}[(a)]
+    \item A full Huffman Tree. \\
+    \begin{tcolorbox}[]
+        Figure \ref{fig:p1_1} illustrates the Huffman Encoding heap tree.
+    \begin{figure}[H]
+        \centering
+        \forestset{
+        tree1/.style={
+            for tree={
+              circle,
+              draw,
+              fit=band,
+              minimum size=2em,
+            },
+          },
+          bl/.style={draw=none, no edge},
+        }
+        \resizebox{.7\linewidth}{!}{
+        \begin{forest}
+            tree1
+            [303, 
+              [120, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                [e, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                ]
+                [62, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                  [h, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                  ]
+                  [33, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                    [16, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      [f, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      ]
+                      [c, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                      ]
+                    ]
+                    [g, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                    ]
+                  ]
+                ]
+              ]
+              [183, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                [81, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                  [a, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                  ]
+                  [i, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                  ]
+                ]
+                [102, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                  [47, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                    [21, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      [d, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      ]
+                      [11, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                        [5, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                          [j, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                          ]
+                          [k, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                          ]
+                        ]
+                        [b, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                        ]
+                      ]
+                    ]
+                    [n, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                    ]
+                  ]
+                  [55, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                    [27, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      [l, edge label={node[midway,sloped,above,font=\scriptsize]{$0$}}
+                      ]
+                      [m, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                      ]
+                    ]
+                    [o, edge label={node[midway,sloped,above,font=\scriptsize]{$1$}}
+                    ]
+                  ]
+                ]
+              ]
+            ]
+        \end{forest}
+        }
+        \caption{Huffman Encoding Heap}
+        \label{fig:p1_1}
+    \end{figure}
+    \end{tcolorbox}
+
+    \item The final codebook that contains the binary codewords representing $a$ to $o$ (1111sorted in the alphabetical order on $a$ to $o$
+    \begin{tcolorbox}
+        The alphabetically sorted codebook is given in Figure \ref{tab:p1_2}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|}
+                \hline
+                word & encoding \\
+                \hline
+                a & 100 \\
+                b & 110011 \\
+                c & 01101 \\
+                d & 11000 \\
+                e & 00 \\
+                f & 01100 \\
+                g & 0111 \\
+                h & 010 \\
+                i & 101 \\
+                j & 1100100 \\
+                k & 1100101 \\
+                l & 11100 \\
+                m & 11101 \\
+                n & 1101 \\
+                o & 1111 \\
+                \hline
+            \end{tabular}
+            \caption{Codebook sorted by word}
+            \label{tab:p1_2}
+        \end{table}
+    \end{tcolorbox}
+    \item The codebook from part (b) but now sorted by the increasing lengths of the codewords.
+    \begin{tcolorbox}
+        The alphabetically sorted codebook is given in Figure \ref{tab:p1_3}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|l|}
+                \hline
+                word & encoding \\
+                \hline
+                    e & 00 \\
+                    a & 100 \\
+                    h & 010 \\
+                    i & 101 \\
+                    g & 0111 \\
+                    n & 1101 \\
+                    o & 1111 \\
+                    c & 01101 \\
+                    d & 11000 \\
+                    f & 01100 \\
+                    l & 11100 \\
+                    m & 11101 \\
+                    b & 110011 \\
+                    j & 1100100 \\
+                    k & 1100101 \\
+                \hline
+            \end{tabular}
+            \caption{Codebook sorted by length of codeword and alphabetic order as tiebreaker}
+            \label{tab:p1_3}
+        \end{table}
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+
+\begin{section}{Optimum Binary Search Trees}
+You are given an alphabet $A$ containing 8 characters (in alphabetical order) and their associated frequencies in the table below. Create an optimal binary search tree of $A$ to minimize the expected time required to search for a character in this alphabet.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+         \hline
+         i & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+         \hline
+         $a_i$ & A & B & C & D & E & F & G & H \\
+         \hline
+         $f(a_i)$ & 5 & 8 & 1 & 6 & 4 & 7 & 3 & 2 \\
+         \hline
+    \end{tabular}
+    \caption{Frequency Distribution}
+    \label{tab:p2}
+\end{table}
+
+\begin{enumerate}
+    \item Present your result by showing the final $e[i, j]$ and $root[i, j]$ tables.
+    \begin{tcolorbox}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                    $[i,j]$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+                \hline
+                    1 & 5 & 18 & 20 & 33 & 45 & 66 & 75 & 83\\
+                    2 & 0 & 8 & 10 & 23 & 33 & 51 & 60 & 68\\
+                    3 & 0 & 0 & 1 & 8 & 16 & 33 & 40 & 46\\
+                    4 & 0 & 0 & 0 & 6 & 14 & 30 & 37 & 43\\
+                    5 & 0 & 0 & 0 & 0 & 4 & 15 & 21 & 27\\
+                    6 & 0 & 0 & 0 & 0 & 0 & 7 & 13 & 19\\
+                    7 & 0 & 0 & 0 & 0 & 0 & 0 & 3 & 7\\
+                    8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2\\
+                \hline
+            \end{tabular}
+            \caption{$e[i,j]$ matrix}
+            \label{tab:p2_a1}
+        \end{table}
+        \begin{table}[H]
+            \centering
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                    $[i,j]$ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+                \hline
+                        1 & 1 & 2 & 2 & 2 & 2 & 4 & 4 & 4\\
+                        2 & 0 & 2 & 2 & 2 & 4 & 4 & 4 & 4\\
+                        3 & 0 & 0 & 3 & 4 & 4 & 5 & 6 & 6\\
+                        4 & 0 & 0 & 0 & 4 & 4 & 5 & 6 & 6\\
+                        5 & 0 & 0 & 0 & 0 & 5 & 6 & 6 & 6\\
+                        6 & 0 & 0 & 0 & 0 & 0 & 6 & 6 & 6\\
+                        7 & 0 & 0 & 0 & 0 & 0 & 0 & 7 & 7\\
+                        8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 8\\
+                \hline
+            \end{tabular}
+            \caption{$root[i,j]$ matrix}
+            \label{tab:p2_a2}
+        \end{table}
+    \end{tcolorbox}
+    
+    \item What is the minimum search time cost of a BST for $A$?
+    \begin{tcolorbox}
+        The minimum cost is given by the top right element on $e[i,j]$ matrix, namely $e[1,8]$ which yield $83$
+    \end{tcolorbox}
+    
+    \item Execute the ``Construct-BST" algorithm. Write down your function calls and draw the final optimal Binary Search Tree Result.
+    
+
+    \begin{tcolorbox}[
+        breakable,
+    ]
+    The recursive function calls is given by Algorithm \ref{algo:p2_c}.
+
+    \begin{minipage}[H]{\linewidth}
+    \begin{algorithm}[H]
+    \SetKwFunction{ConstructBST}{Construct-BST}
+    \caption{Function call of Construct-BST}
+    \hspace{0em}\ConstructBST{root, 1, 8} \\ 
+      \hspace{1em}\ConstructBST{root, 1, 3} \\ 
+        \hspace{2em}\ConstructBST{root, 1, 1} \\ 
+          \hspace{3em}\ConstructBST{root, 1, 0} \\ 
+          \hspace{3em}\ConstructBST{root, 2, 1} \\ 
+        \hspace{2em}\ConstructBST{root, 3, 3} \\ 
+          \hspace{3em}\ConstructBST{root, 3, 2} \\ 
+          \hspace{3em}\ConstructBST{root, 4, 3} \\ 
+      \hspace{1em}\ConstructBST{root, 5, 8} \\ 
+        \hspace{2em}\ConstructBST{root, 5, 5} \\ 
+          \hspace{3em}\ConstructBST{root, 5, 4} \\ 
+          \hspace{3em}\ConstructBST{root, 6, 5} \\ 
+        \hspace{2em}\ConstructBST{root, 7, 8} \\ 
+          \hspace{3em}\ConstructBST{root, 7, 6} \\ 
+          \hspace{3em}\ConstructBST{root, 8, 8} \\ 
+            \hspace{4em}\ConstructBST{root, 8, 7} \\ 
+            \hspace{4em}\ConstructBST{root, 9, 8} \\ 
+    
+    \label{algo:p2_c}
+    \end{algorithm}
+    \end{minipage}
+    
+    An optimized BST is illustrated in Figure \ref{fig:p2_c}
+    \begin{figure}[H]
+        \centering
+        \forestset{
+        tree1/.style={
+            for tree={
+              circle,
+              draw,
+              fit=band,
+              minimum size=2em,
+            },
+          },
+          bl/.style={draw=none, no edge},
+        }
+        \begin{forest}
+            tree1
+            [4, 
+              [2, 
+                [1, 
+                  [, bl]
+                  [, bl]
+                ]
+                [3, 
+                  [, bl]
+                  [, bl]
+                ]
+              ]
+              [6, 
+                [5, 
+                  [, bl]
+                  [, bl]
+                ]
+                [7, 
+                  [, bl]
+                  [8, 
+                    [, bl]
+                    [, bl]
+                  ]
+                ]
+              ]
+            ]
+        \end{forest}
+        \caption{A Optimal Tree}
+        \label{fig:p2_c}
+    \end{figure}
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Chain Matrix Multiplication}
+Recall that the cost of multiplying matrices together is the total number of scalar multiplications used.
+
+Let $\text{cost}((A_1A_2)A_3)$ be the cost of first multiplying $A_1A_2$ and then multiplying their result by $A_3$, Let $\text{cost}(A_1(A_2A_3))$ be the cost of first multiplying $A_2A_3$ and then multiplying their result by $A_1$. In class we saw an example in which 
+$$
+\frac{\text{cost}(A_1(A_2A_3))}{\text{cost}((A_1A_2)A_3)} = 10
+$$
+
+Multiplying in the "correct" order could reduce the total cost by $90\%$. For this problem, for every integer $t > 1$ define a quadruple $\pbracket{p_0^{(t)}, p_1^{(t)}, p_2^{(t)}, p_3^{(t)}}$ such that, if $A_i$ has dimensions $p_{i-1}^{(t)} \times p_{i}^{(t)}$ then, 
+\begin{align*}
+    \frac{\text{cost}(A_1(A_2A_3))}{\text{cost}((A_1A_2)A_3)} \geq t.
+    \label{eq:p3_1}
+    \tagthis
+\end{align*}
+This shows that the gain of using the "correct" order is unbounded. Your solution should be in two parts:
+\begin{enumerate}
+    \item Give the formulas for $\pbracket{p_0^{(t)}, p_1^{(t)}, p_2^{(t)}, p_3^{(t)}}$ \\
+    \begin{tcolorbox}
+    The cost ratio is given by:
+    \begin{align*}
+        \frac{\text{cost}(A_1(A_2A_3))}{\text{cost}((A_1A_2)A_3)} = \frac{p_0 p_1 p_3 + p_1 p_2 p_3}{p_0 p_1 p_2 + p_0 p_2 p_3} = \frac{(p_0 + p_2)}{p_0 p_2} \frac{p_1 p_3}{(p_1 + p_3)} \geq t
+    \end{align*}
+    The following conditions should suffice for the inequality to hold:
+    \begin{align*}
+        \begin{cases}
+            \dfrac{(p_0 + p_2)}{p_0 p_2} \geq 1 \\[10pt]
+            \dfrac{p_1 p_3}{(p_1 + p_3)} \geq t
+        \end{cases}
+        \iff 
+        \begin{cases}
+            \dfrac{1}{p_0} + \dfrac{1}{p_2} \geq 1 \\[10pt]
+            \dfrac{1}{p_1} + \dfrac{1}{p_3} \leq \dfrac{1}{t}
+        \end{cases}
+    \end{align*}
+    For the first inequality, we can take:
+    \begin{align*}
+        \frac{1}{p_0} + \frac{1}{p_2} \geq 1 \Leftarrow \pbracket{(p_0 \leq 2) \land (p_2 \leq 2)}
+    \end{align*}
+    For the second inequality, we can take:
+    \begin{align*}
+        \frac{1}{p_1} + \frac{1}{p_3} \leq \frac{1}{t} \Leftarrow \pbracket{(p_1 \geq 2t) \land (p_3 \geq 2t)}
+    \end{align*}
+    Note that $p_i \in \mathbb{Z^+}$. Thus, $\forall t > 1, t \in \mathbb{Z^+}$, we can take $\pbracket{p_0^{(t)}, p_1^{(t)}, p_2^{(t)}, p_3^{(t)}}$ to be $\pbracket{1, 2t, 1, 2t}$ such that the gain is greater or equal to $t$.
+    \end{tcolorbox}
+    \item Prove the correctness of align* \ref{eq:p3_1} for your given values.
+    
+    \begin{tcolorbox}
+        For $t = 2$, the gain is $4 \geq t$. In general, $\forall t > 1, t \in \mathbb{Z^+}$, the gain is $2t \geq t$. 
+    \end{tcolorbox}
+    
+    \item Given a chain of 7 matrices $\kbracket{A_1, A_2, \dots, A_7} >$ and their dimensions (as provided in the table below) fully parenthesize the product $A_1 A_2 \dots A7$ in a way that minimizes the number of scalar multiplications required to multiply them all together
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|c|c|c|c|c|c|c|c|}
+             \hline
+             Matrix & $A_1$ & $A_2$ & $A_3$ & $A_4$ & $A_5$ & $A_6$ & $A_7$ \\
+             \hline
+             Dimension & $6 \times 7$ & $7 \times 3$ & $3 \times 1$ & $1 \times 2$ & $2 \times 4$ & $4 \times 5$ &  $5 \times 3$\\
+             \hline
+        \end{tabular}
+        \caption{Matrix Dimensions}
+        \label{tab:p3_1}
+    \end{table}
+    \begin{enumerate}
+        \item Present your result by showing the final $m[i, j]$ and $s[i, j]$ tables.
+        \begin{tcolorbox}
+        The $m$ and $s$ tables are shown below.
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                    \hline
+                    $m[i,j]$ & 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+                    \hline
+                    1 & 0 & 126 & 63 & 75 & 95 & 121 & 124\\
+                    2 & & 0 & 21 & 35 & 57 & 84 & 85\\
+                    3 & & & 0 & 6 & 20 & 43 & 52\\
+                    4 & & & & 0 & 8 & 28 & 43\\
+                    5 & & & & & 0 & 40 & 70\\
+                    6 & & & & & & 0 & 60\\
+                    7 & & & & & & & 0\\
+                    \hline
+                \end{tabular}
+                \caption{$m[i,j]$ table}
+                \label{tab:p3_b2}
+            \end{table}
+            \begin{table}[H]
+                \centering
+                \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                    \hline
+                    $s[i,j]$ & 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+                    \hline
+                    1 & & 1 & 1 & 3 & 3 & 3 & 3\\
+                    2 & & & 2 & 3 & 3 & 3 & 3\\
+                    3 & & & & 3 & 3 & 3 & 3\\
+                    4 & & & & & 4 & 5 & 6\\
+                    5 & & & & & & 5 & 6\\
+                    6 & & & & & & & 6\\
+                    7 & & & & & & &\\
+                    \hline
+                \end{tabular}
+                \caption{$s[i,j]$ table}
+                \label{tab:p3_b1}
+            \end{table}
+        \end{tcolorbox}
+        
+        \item What is the minimum number of scalar multiplications needed to compute the product $A_1 A_2 \dots A_7$?
+        \begin{tcolorbox}
+            The minimum number of scalar multiplication is given by the top right element of $m$ matrix, namely $m[1,7] = 124$.
+        \end{tcolorbox}
+        
+        \item Present the optimal parenthesized sequence for multiplying $A_1 A_2 \dots A_7$
+        \begin{tcolorbox}
+            The optimal parenthesization is given by:
+            \begin{align*}
+                \pbracket{A_{1..s[1,5]}A_{s[1,5]+1..5}} &= \pbracket{A_{1..3}A_{4..7}} \\
+                &= \pbracket{\pbracket{A_1\pbracket{A_2 A_3}}\pbracket{\pbracket{\pbracket{A_4 A_5} A_6}A_7}} \\
+                &= \pbracket{\pbracket{A_1A_{2..3}}A_{4..7}} \\
+                &= \pbracket{\pbracket{A_1\pbracket{A_2 A_3}}A_{4..7}} \\
+                &= \pbracket{\pbracket{A_1\pbracket{A_2 A_3}}\pbracket{A_{4..6}A_7}} \\
+                &= \pbracket{\pbracket{A_1\pbracket{A_2 A_3}}\pbracket{\pbracket{A_{4..5}A_6}A_7}} \\
+                &= \pbracket{\pbracket{A_1\pbracket{A_2 A_3}}\pbracket{\pbracket{\pbracket{A_4A_5}A_6}A_7}}
+            \end{align*}
+        \end{tcolorbox}
+    \end{enumerate}
+\end{enumerate}
+\end{section}
+
+\newpage
+
+\begin{section}{More Optimum Binary Search Trees}
+In class we developed a $O(n^3)$ time solution for the optimal Binary Search tree problem.
+In this problem you need to modify that solution to construct an optimal tree of given restricted height. The height of a tree $T$ is:
+\begin{align*}
+    height(T) = \max_{1 \leq t \leq n} d(a_t)
+\end{align*}
+where $d(a_t)$ is the depth of the node corresponding to $a_t$ in tree $T$.
+
+The optimal tree constructed by the algorithm could have height as large as $n-1$. One standard constraint that occurs in practice is to restrict the tree height. That is, given $h$, to find a tree T0 such that $height(T') \leq h$ and
+\begin{align*}
+    B(T') = \min\cbracket{B(T) \; : \; \text{$T$ is a BST satisfying $height(T) \leq h$}}
+\end{align*}
+Do the following.
+\begin{enumerate}
+    \item  For $1 \leq i \leq j \leq n$ and $0 \leq k \leq h$, set
+    \begin{align*}
+        e[i, j:k] = \begin{split}
+            &\text{the minimum cost of any BST $T$} \\ 
+            &\text{on $a_i \dots a_j$ with $height \leq k$} 
+        \end{split}
+        \tagthis
+    \end{align*}
+    Give a Dynamic Programming recurrence align for $e[i,j:k]$. Don't forget to provide the initial conditions.
+    
+    \begin{tcolorbox}
+        The recurrence relation is given by:
+        initialization:
+        \begin{align*}
+            w[i,j] &= \sum_{p=i}^{j}{f(p)} \\
+            e[i,i:0] &= f(i) && \forall \cbracket{i, i \in[1, n]}  \\
+            e[i,j:0] &= 0 && \forall \cbracket{(i, j), i > j} \\
+            e[i,j:0] &= \infty && \forall \cbracket{(i,j), i < j} \\
+        \end{align*}
+        recurrence relation:
+        \begin{align*}
+            e[i,j:k] &= \min_{i \leq z \leq j}{e[i,z-1 :k-1] + e[z+1,j:k-1] + w[i,j]} && \forall \cbracket{k, 0 < k \leq h}
+        \end{align*}
+    \end{tcolorbox}
+    
+    \item Justify (prove) the correctness of the recurrence relation from part (a).
+    \begin{tcolorbox}[breakable]
+        \textbf{Base Case $k=0$}: $e[i,j:0]$ is correct, as the only possible way to construct a tree with height 0 is by having the root as the only node in the tree. This $e[i,i:0]$ matrix only has one diagonal nonzero and non-infinite entry at $i=j$.
+        
+        \smallskip
+        \textbf{Base Case $k=1$}: $e[i,j:1]$ is correct. Observe that the matrix has similarities to the original $e[i,j]$. This matrix $e[i,i:1]$ now has three nonzero and non-infinite matrix at $j=i$, $j=i+1$, $j=i+2$. The entries at $j=i$ yield $f[i]$, the entries at $j=i+1$ yield $e[i, i+1]$ from the original $e$ matrix described in the class. The entries at $j=i+2$ is restricted, as the only possible configuration to make a BST with three nodes and height one is by having one node as root, and two nodes as left and right children. 
+        
+        \smallskip
+        \textbf{General case $k \geq 0$}: assume the induction hypothesis $I(k')$: ``$e[i,j:k']$ The algorithm correctly returns the minimum cost of any BST $T$ on $a_i \dots a_j$ with $height < k$" is correct for all $k' < k$. \\
+        $e[i,j:k]$ return an optimal tree for with $height \leq k$. Then, the left and right subtree must be an optimal tree with $height \leq k-1$. \\
+        From the class: the cost of tree $B(T_{i,j})$ with root $z$ is given by:
+        \begin{align*}
+            B(T_{i,j}) = B(T_{i, z-1}) + B(T_{k+1, j}) + w[i,j] 
+        \end{align*}
+        Then, the optimal tree with $height \leq k$ is:
+        \begin{align*}
+            e[i,j:k] &= \min_{i \leq z \leq j}{e[i,z-1 :k-1] + e[z+1,j:k-1] + w[i,j]}
+        \end{align*}
+        By the induction hypothesis and the lemma, $e[i,j: k]$ correctly return the optimal tree on $a_i \dots a_j$ with $height < k$. The induction hypothesis $I(k)$ is true for all $k \geq 0$
+    \end{tcolorbox}
+    
+    \item  Give documented pseudocode for an $O(n^3h)$ time algorithm to calculate $e[1, n : h]$
+    \begin{tcolorbox}
+        \begin{minipage}{\linewidth}
+        \begin{algorithm}[H]
+        \caption{Initialize-Optimized-Cost-Matrix($f(a_i), n$)}
+        let $e[1..n, 1..n : 0..n-1]$, $w[1..n, 1..n]$ be new arrays of all 0 \\
+        \tcp{initialize weight matrix}
+        \For{$i \gets 1$ \KwTo $n$}{
+            $w[i,i] \gets f(a_i)$ 
+            \For{$j = i + 1$ \KwTo $n$}{
+                $w[i,j] \gets w[i, j-1] + f(a_j)$
+            }
+        }
+        \tcp{initialize e matrix for the upper right to be infinite except the diagonal}
+        \For{$i \gets 0$ \KwTo $n$}{
+            \For{$j \gets i$ \KwTo $n$}{
+                \eIf{$i = j$}{
+                    $e[i,j : 0] = f(a_i)$
+                }{
+                    $e[i,j : 0] = \infty$
+                }
+            }
+        }
+        \tcp{dynamic programming for e matrix}
+        \For{$k \gets 1$ \KwTo $n-1$}{
+            \For{$l \gets 1$ \KwTo $n$}{
+                \For{$i \gets 1$ \KwTo $n-l+1$}{
+                    $j \gets i + l - 1$ \\
+                    $e[i,j : k] \gets \infty$ \\
+                    \tcp{minimize the cost by considering the tree with smaller height}
+                    \For{$z \gets i$ \KwTo $j$}{
+                        $t \gets e[i, z-1 : k-1] + e[z+1, j : k-1] + w[i,j]$ \\
+                        \If{$t < e[i, j : k]$}{
+                            $e[i,j] \gets t$ 
+                        }
+                    }
+                }
+            }
+        }
+        \KwRet $e[1..n, 1..n : 0..n-1]$
+        \end{algorithm}
+        \end{minipage}
+    \end{tcolorbox}
+    
+    \item Explain why your algorithm runs in the required time.
+    \begin{tcolorbox}
+        The running time of computing $e[i,j : k]$, given that $e[i,j : k-1]$ is known is $O(n^3)$. Therefore, to compute $e[i,j : h]$ for $0 \leq k \leq n-1$, the total running time required is $O(n^3h)$
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+
+\begin{section}{Dynamic Programming}
+The input to this problem is a directed "triangle graph" $G = (V, E)$ with $h$ levels. It contains $n = h(h+1)/2$ nodes:
+\begin{align*}
+    V &= \cbracket{(i, j) :  i \in \sbracket{1, h}, j \in [1, i]} \\
+    E &= \bigcup_{\substack{(i,j) \in V \\ i < h}} \sbracket{\pbracket{(i,j), (i+1, j)}, \pbracket{(i, j ), (i+1, j+1)}}
+\end{align*}
+Intuitively, node $(i,j)$ on level $i < h$ points to two nodes on level $i + 1$, $(i + 1, j)$ to its left $(L)$ and $(i + 1, j + 1)$ to its right $(R)$.
+
+Each node in the tree has a given positive integral value, $A[i,j]$
+
+A path is a walk down the graph starting at $(1, 1$): It is described by a length $j < h$ string $w_1, w_2, \dots, w_j \in \cbracket{L, R}^j$. The path starts at the top node $(1, 1)$ and, from level $i$ it walks down to level $i + 1$ either by going LEFT (if $w_i = L$) or RIGHT (if $w_i = R$).
+
+\begin{itemize}
+    \item The \emph{value} of a path is the sum of the values on the path.
+    \item A turn on a path is a $L$ followed by an $R$ or a $R$ followed by an $L$. For example $LLLRRRRLRR$ has three turns.
+    \item A path is balanced if the number of even integers on the path is equal to the number of odd integers on the path.
+\end{itemize}
+
+Each one of (a), (b), (c) should be split into the following five separate parts
+\begin{enumerate}[(i)]
+    \item Give the recurrence upon which your DP algorithm is based.
+    \item Explain how, after filling in your table, you can use the information in the table to solve the stated problem.
+    \item Justify (prove) the correctness of the recurrence relation from part (i)
+    \item Give documented psuedocode for your algorithm.
+    \item Explain why your algorithm runs in the required time.
+\end{enumerate} 
+
+Solve the following three problems using dynamic programming. The solutions for each of (a), (b) and (c) should start on a new page. 
+\begin{enumerate}
+    \newpage
+    \item Find the maximum value of a path in the graph. Your algorithm should run in $O(n)$ time.
+    \begin{tcolorbox}[breakable]
+        \begin{enumerate}
+            \item Basis of algorithm \\
+            Define the maximum value of a path ending at $[i,j]$ as $M[1..h, 0..h+1]$.
+            \begin{align*}
+                M[i,j] &= \text{maximum value of a path ending at $i,j$}
+            \end{align*}
+            Then, the maximum value path of that ends at level $i$ (length $i-1$) is:
+            \begin{align*}
+                W^{\pbracket{i}} = \max_{1 \leq k \leq i}\cbracket{M[i, k]}
+            \end{align*}
+            The recurrence of $M[i, j]$ is given by:
+            \begin{align*}
+                M[i, j] &= \max \cbracket{(M[i-1, j]), (M[i-1, j-1])} + A[i, j]
+            \end{align*}
+            Initial Condition:
+            \begin{align*}
+                M[i, j] &= -\infty \quad \text{initialization for all $i, j$}\\
+                M[1, 1] &= A[1, 1]
+            \end{align*}
+            
+            \item Solving the problem \\
+            First note the increasing property of $M[i+1, j] > M[i, j]$, therefore the maximum turns should reach the leaves of the tree. 
+            To find the maximum value of a path in a graph, we need to find $W^{\pbracket{h}} = \max_{1 \leq k \leq h}\cbracket{M[h, k]}$
+            
+            \item Proof of correctness
+            % \setlist{nolistsep} 
+            \begin{itemize}
+                \item \textbf{Base Case $h=1$}: $W^{(1)} = M[1,1]$ is correct as $M[1,1] = A[1,1]$ is the only element in the matrix.
+                \item \textbf{Base Case $h>1$}: For $h' < h$, consider the induction hypothesis $I(h')$: "M is the maximum value of a path ending at $i, j$". Then the only two possible path to $(i,j)$ is by passing through vertex $(i-1, j)$ or $(i-1 , j-1)$. The maximum value of the path ending at $(i, j)$ maximum of $M[i-1, j] + A[i,j]$ or $M[i-1, j-1] + A[i, j]$. Therefore the induction hypothesis $I(h)$ is correct for all $h \geq 1$. \\
+                The algorithm correctly return the maximum value of a path with length $h$, $W^{(h)}  = \max_{1 \leq k \leq h}\cbracket{M[h, k]}$.
+            \end{itemize}
+            
+            \newpage
+            \item Documented pseudocode\\
+            \begin{minipage}{\linewidth}
+            \begin{algorithm}[H]
+                \caption{Find-Maximum-Value$(A, h)$}
+                \KwLet $M[1..h, 0..h+1]$ be new array of all $-\infty$ and  $W = -\infty$ \\
+                \tcp{Initialize the recurrence}
+                $M[1, 1] \gets A[1, 1]$\\
+                \For{$i \gets 2$ \KwTo h}{
+                    \For{$j \gets 1$ \KwTo i}{
+                        \tcp{Find minimum value for each node}
+                        \For{$z \gets 0$ \KwTo 1}{
+                            $t \gets M[i-1, j-z] + A[i, j]$\\
+                            \KwIf $t > M[i,j]$ \KwThen $M[i,j] = t$
+                        }
+                    }
+                }
+                \For{$j \gets 1$ \KwTo h}{
+                    $t \gets M[h, j]$ \\
+                    \KwIf $t > W$ \KwThen $W \gets t$
+                }
+                \KwRet $W$
+            \end{algorithm}
+            
+            \item Running Time Analysis\\
+                The running time of filling the $M[i,j]$ for all $i,j$ is $O(h(h+1)) = O(n)$. The running time of finding the maximum element is $O(h) = O(\sqrt{n})$. Therefore the total running time is $O(n)$ 
+            \end{minipage}
+        \end{enumerate}
+    \end{tcolorbox}
+    
+    \newpage 
+    \item Find the maximum value of a balanced path in the graph. Your algorithm should run in $O(n^{3/2})$ time.
+    \begin{tcolorbox}[breakable]
+        \begin{enumerate}
+            \item Basis of algorithm \\
+            Define the maximum value of a path ending at $[i,j]$ with $p$ number of odd element as $M[1..h, 0..h+1 : -1..h]$.
+            \begin{align*}
+                M[i,j : p] &= \text{maximum value of a path ending at $i,j$ with $p$ odd element}
+            \end{align*}
+            Then, the maximum value path of that ends at level $i$ (length $i-1$) with $p$ odd element is:
+            \begin{align*}
+                W_p^{\pbracket{i}} = \max_{1 \leq k \leq i}\cbracket{M[i, k : p]}
+            \end{align*}
+            The recurrence of $M[i, j]$ is given by:
+            \begin{align*}
+                M[i, j : p] &= 
+                \begin{cases}
+                    \max \cbracket{(M[i-1, j : p]), (M[i-1, j-1 : p] )} + A[i, j] & \text{if $A[i, j]$ is even} \\
+                    \max \cbracket{(M[i-1, j : p-1]), (M[i-1, j-1 : p-1])} + A[i, j] & \text{if $A[i, j]$ is odd} 
+                \end{cases}
+            \end{align*}
+            Initial Condition:
+            \begin{align*}
+                M[i, j : p] &= -\infty \quad \text{initialization for all $i, j, p$}\\
+                M[1, 1 : 0] &= 
+                \begin{cases}
+                    A[1, 1] & \text{if $A[1, 1]$ is even} \\
+                    -\infty   & \text{if $A[1, 1]$ is odd}
+                \end{cases} \\
+                M[1, 1 : 1] &= 
+                \begin{cases}
+                    -\infty & \text{if $A[1, 1]$ is even} \\
+                    A[1, 1]   & \text{if $A[1, 1]$ is odd}
+                \end{cases}
+            \end{align*}
+            
+            \item Solving the problem \\
+            First note the increasing property of $M[i+1, j] > M[i, j]$, therefore the maximum turns should reach the leaves of the tree. 
+            To find the maximum value of a balanced path in a graph, assuming $h$ is even, the number of odd element must be equal to the number of even element, $p = \floor{h/2}$, either on $i = h$ (if $h$ is even) or $i = h-1$ (if $h$ is odd). Therefore, we return $W_{\floor{h/2}}^{\pbracket{h}} = \max_{1 \leq k \leq h}\cbracket{M[h, k, : \floor{h/2}]}$ as the problem description requires.
+            
+            \item Proof of correctness \\
+            Correctness of $M[i,j : p]$ matrix:
+            \begin{itemize}
+                \item \textbf{Base Case $h=1$}: $M[1,1 : 0..1]$ are correct as $A[1,1]$ is either odd or even. 
+                \item \textbf{Base Case $h>1$}: For $h' < h$, consider the induction hypothesis $I(h')$: "M is the maximum value of a path ending at $i, j$ with $p$ odd element". Then, the only two possible path to $(i,j)$ is by passing through vertex $(i-1, j)$ or $(i-1 , j-1)$.
+                
+                If $A[i, j]$ is even, then $M[i,j : p]$ is preceded with maximum path to either vertex $(i-1, j)$ or $(i-1 , j-1)$ with exactly $p$ odd elements. 
+                Otherwise, if $A[i,j]$ is odd, then $M[i,j : p]$ is preceded with maximum path to either vertex $(i-1, j)$ or $(i-1 , j-1)$ with exactly $p-1$ odd elements. 
+
+                Therefore, the induction hypothesis $I(h)$ is correct for all $h \geq 1$.
+            \end{itemize}
+            Correctness of algorithm: 
+            \begin{itemize}
+                \item If $h$ is even, the algorithm will correctly return the maximum value balanced path, $W_{h/2}^{\pbracket{h}} = \max_{1 \leq k \leq h}\cbracket{M[k, h : h/2]}$
+                \item If $h$ is odd, the algorithm will correctly return the maximum value balanced path, $W_{\floor{h/2}}^{\pbracket{h}} = \max_{1 \leq k \leq h}\cbracket{M[k, h : \floor{h/2}]}$
+            \end{itemize}
+            Therefore, the algorithm is correct for all $h \in \mathbb{Z}$.
+            
+            \newpage
+            \item Documented pseudocode\\
+            \begin{minipage}{\linewidth}
+            \begin{algorithm}[H]
+                \caption{Find-Maximum-Value-Balanced$(A, h)$}
+                \KwLet $M[1..h, 0..h+1 : -1..h]$ be new array of all $-\infty$ and  $W = -\infty$ \\
+                \eIf{$A[1, 1]$ \KwIs even}{
+                    $M[1, 1 : 0] \gets A[1, 1]$
+                }{
+                    $M[1, 1 : 1] \gets A[1, 1]$
+                }
+                \For{$i \gets 2$ \KwTo h}{
+                    \For{$j \gets 1$ \KwTo i}{
+                        \For{$p \gets 0$ \KwTo i}{
+                            \tcp{Find maximum value for each cases}
+                            \eIf{$A[i, j]$ \KwIs even}{
+                                \tcp{for even node, store to the same p}
+                                \For{$z \gets 0$ \KwTo 1}{
+                                    $t \gets M[i-1, j-z : p] + A[i, j]$\\
+                                    \KwIf $t > M[i,j : p]$ \KwThen $M[i,j : p] = t$
+                                }
+                            }{
+                                \tcp{for odd node, store to the p+1}
+                                \For{$z \gets 0$ \KwTo 1}{
+                                    $t \gets M[i-1, j-z : p-1] + A[i, j]$\\
+                                    \KwIf $t > M[i,j : p-1]$ \KwThen $M[i,j : p] = t$
+                                }
+                            }
+                        }
+                    }
+                }
+                \tcp{Get the optimal cost for balanced node}
+                \For{$j \gets 1$ \KwTo h}{
+                    \eIf{$i$ is even}{
+                        $t \gets M[h, j : \floor{h/2}]$ \\
+                    }{
+                        $t \gets M[h-1, j : \floor{h/2}]$ \\
+                    }
+                    \KwIf $t > W$ \KwThen $W \gets t$
+                }
+                \KwRet $W$
+            \end{algorithm}
+            
+            \item Running Time Analysis\\
+                For a particular $(i,j)$, the running time of filling the $M[i,j : 0..i]$ is $O(i)$. The total running time of filling all $M[1..h, 0..h+1, 0..h]$ is $O(h^3) = O(n^2)$ . The running time of finding the maximum element is $O(h) = O(\sqrt{n})$. Therefore the total running time is $O(n^{3/2})$ 
+            \end{minipage}
+        \end{enumerate}
+    \end{tcolorbox}
+
+    \newpage 
+    \item Find the maximum value of a path containing exactly $\floor{h/2}$ turns in the graph. Your algorithm should run in $O(n^{3/2})$ time.
+    \begin{tcolorbox}[breakable]
+        \begin{enumerate}
+            \item Basis of algorithm \\
+            Define the maximum value of a path ending at $[i,j]$ with $q \in [0..h-1]$ turns, and last direction as enumeration $r \in \cbracket{L, R}$  as $M[1..h, 0..h : 0..h-2, \cbracket{L,R}]$
+            \begin{align*}
+                M[i,j : p, r] &= \text{maximum value of a path ending at $i,j$ with $q$ turns and last direction of $r$}
+            \end{align*}
+            Furthermore, define NOT operator on $\neg r$, $\neg (L, R) = (R, L)$
+            
+            Then, the maximum value path that ends at level $i$ (length $i-1$) with $q$ turns:
+            \begin{align*}
+                W_q^{\pbracket{i}} = \max_{\substack{1 \leq k \leq i \\ r \in \cbracket{L,R}}}\cbracket{M[i, k : q, r]}
+            \end{align*}
+            The recurrence of $M[i, j]$ is given by:
+            \begin{align*}
+                M[i, j : q, r] &= \max\left\{
+                \begin{matrix}
+                    (M[i-1, j : q, r]), & (M[i-1, j-1 : q, r]),  \\ 
+                    (M[i-1, j : q-1, \neg r]), & (M[i-1, j-1 : q-1, \neg r]) 
+                \end{matrix}
+                \right\} + A[i, j]
+            \end{align*}
+            Initial condition:
+            \begin{align*}
+                M[i, j : q, r] &= -\infty \quad \text{initialization for all $i, j, q, r$}\\
+                M[1, 1 : 0, r] &= -\infty \quad \text{turns is not defined for $h=1$}\\
+                M[2, 1 : 0, L] &= A[1,1] + A[2, 1] \\
+                M[2, 2 : 0, R] &= A[1,1] + A[2, 2]
+            \end{align*}
+            
+            \item Solving the problem \\
+            To find the maximum value of a path in the graph with $\floor{h/2}$ turns, we need to find $W_{\floor{h/2}}^{(h)} = \max_{\substack{1 \leq i \leq h, 1 \leq j \leq i \\ r \in \cbracket{L,R}}}\cbracket{M[h, k : \floor{h/2}, r]}$. 
+            
+            \item Proof of correctness \\
+            Correctness of $M[i,j : q, r]$ matrix:
+            \begin{itemize}
+                \item \textbf{Base Case $h=2$}: $M[2,1 : 0, L]$ and $M[2,2 : 0, R]$ are correct trivially. 
+                \item \textbf{Base Case $h>2$}: For $h' < h$, consider the induction hypothesis $I(h')$: "M is the maximum value of a path ending at $i, j$ with $q$ turns and last path of $r$". Then, the only two possible path to $(i,j)$ is by passing through vertex $(i-1, j)$ or $(i-1 , j-1)$. Furthermore, for each preceding vertex, the path could be pointed to the same or opposite direction to compared to the previous one. If the path is pointing to the opposite direction, then the number of count $q$ increases. 
+                
+                For a given $M[i, j : q, r]$ there are 4 possibilities of preceding path, which are:
+                \begin{itemize}
+                    \item Coming from left, previous direction from the left, $(M[i-1, j-1 : q, r])$
+                    \item Coming from left, previous direction from the right, $(M[i-1, j-1 : q-1, \neg r])$
+                    \item Coming from right, previous direction from the left, $(M[i-1, j : q-1, \neg r])$
+                    \item Coming from right, previous direction from the right, $(M[i-1, j : q, r])$
+                \end{itemize}
+                Therefore, $M[i, j : q, r]$ correctly record the maximum value between these four possibilities in addition to the its value $A[i,j]$. 
+                Therefore, the induction hypothesis $I(h)$ is correct for all $h \geq 2$.
+            \end{itemize}
+            Correctness of algorithm:
+            The maximum value of a path is strictly increasing, the maximum value on the leaves of the tree. The algorithm correctly return the maximum value of a path which ends at the $h$ level in the graph with $q = \floor{h/2}$ turns for any last direction $r$.
+            Therefore, the algorithm is correct for all $h \geq 2$.
+            
+            \newpage
+            \item Documented pseudocode\\
+            \begin{minipage}{\linewidth}
+            \begin{algorithm}[H]
+                \caption{Find-Maximum-Value-Turn$(A, h)$}
+                \KwLet $M[1..h, 0..h+1 : 0..h-1, {L, R}]$ be new array of all $-\infty$ and  $W = -\infty$ \\
+                \tcp{Initialize the recurrence}
+                $M[2, 1 : 0, L] \gets A[1, 1] + A[2, 1]$ \\
+                $M[2, 2 : 0, R] \gets A[1, 1] + A[2, 2]$ \\
+                \tcp{Fill M matrix}
+                \For{$i \gets 3$ \KwTo h}{
+                    \For{$j \gets 1$ \KwTo i}{
+                        \For{$q \gets 0$ \KwTo $h-1$}{
+                            \tcp{Find maximum value for each allowed configuration}
+                            \ForEach{$r$ \KwIn $\cbracket{L, R}$}{
+                                \ForEach{$(i', j' : q', r')$ \KwIn
+                                $[$ \\
+                                \hspace{1em}$(i-1, j : q, r),$ \\
+                                \hspace{1em}$(i-1, j : q-1, \neg r),$ \\
+                                \hspace{1em}$(i-1, j-1 : q, r),$ \\
+                                \hspace{1em}$(i-1, j-1 : q-1, \neg r)$ \\
+                                $]$}{
+                                    $t \gets M[i', j' : q', r'] + A[i, j]$\\
+                                    \KwIf $t > M[i,j : q, r]$ \KwThen $M[i,j : q, r] = t$
+                                }
+                            }
+                        }
+                    }
+                }
+                \tcp{Get the maximum value for exactly $\floor{q/2}$ turns for all direction}
+                \For{$i \gets 1$ \KwTo $h$}{
+                    \For{$j \gets 1$ \KwTo $i$}{
+                        \ForEach{$r$ \KwIn $\cbracket{L, R}$}{
+                            $t \gets M[h, j : \floor{h/2}, r]$ \\
+                            \KwIf $t > W$ \KwThen $W \gets t$
+                        }
+                    }
+                }
+                \KwRet W
+            \end{algorithm}
+            
+            \item Running Time Analysis\\
+                For a particular $(i,j)$ and any $r$, the running time of filling the $M[i,j : 0..h-1, r]$ is $O(i)$. The total running time of filling all $M[1..h, 0..h+1, 0..h-1, \cbracket{L,R}]$ is $O(h^3) = O(n^2)$ . The running time of finding the maximum element is $O(h^2) = O(n)$. Therefore the total running time is $O(n^{3/2})$ 
+            \end{minipage}
+        \end{enumerate}
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Edit Distance}
+In this problem you must describe a dynamic programming algorithm for the \emph{minimum edit distance} problem.
+
+Background: The goal of the algorithm is to find a way to transform a "source" string $x[1 \dots m]$ into a new "target" string $y[1 \dots n]$ using any sequence of operations, \emph{operating on the source string from left to right}. The
+$copy$ operation copies the first remaining character in the source string to the target string, and deletes it from the source string. The $insert$ operation adds one character to the end of the current target string. The $delete$ operation deletes the first remaining character from the source string.
+
+Each of the operations has an associated cost, $\mathbf{C}$ for copy, $\mathbf{I}$ for insert, and $\mathbf{D}$ for delete. The cost of a given sequence of transformation operations is 10the sum of the costs of the individual operations in the sequence.
+
+Given two sequences $x[1 \dots m]$ and $y[1 \dots n]$ and a given set of operation costs $\mathbf{C}$, $\mathbf{D}$, and $\mathbf{D}$, the \emph{minimum edit distance} from $x$ to $y$ is the cost of the \emph{least expensive transformation} sequence that converts $x$ to $y$.
+
+\begin{enumerate}
+    \item Set $X[i] = x[1..i]$ and $Y[j] = y[1..j]$. Define the cost matrix as:
+    \begin{align*}
+        D[i, j] = \text{minimum edit distance to transform $X[i]$ to $Y[j]$}
+    \end{align*}
+    Give a Dynamic Programming recurrence align* for $D[i, j]$. Don’t forget to provide the initial conditions.
+    \begin{tcolorbox}
+        The recurrence relation of the cost matrix $D[i, j]$ is given by:
+        \begin{align*}
+            D[i, j] &= 
+            \begin{cases}
+                D[i-1, j-1] + \mathbf{C} & \text{if $x[i] = y[j]$}\\
+                \min \cbracket{D[i-1, j] + \mathbf{D}, D[i, j-1] + \mathbf{I}} & \text{if $x[i] \neq y[j]$}
+            \end{cases} \\
+            & \quad \text{for $\cbracket{(i,j) : 0 \leq i \leq m, 0 \leq j \leq n}$}
+        \end{align*}
+        Initial condition: 
+        \begin{align*}
+            \begin{split}
+                D[0, 0] &= 0 \\
+                D[i, 0] &= i\mathbf{D} \\ 
+                D[0, j] &= j\mathbf{I} \\
+            \end{split}
+            \quad \text{for $\cbracket{(i,j) : 0 \leq i \leq m, 0 \leq j \leq n}$}
+        \end{align*}
+    \end{tcolorbox}
+    
+    \item Justify (prove) the correctness of the recurrence relation from part (a).
+    \begin{tcolorbox}[breakable]
+    \begin{itemize}
+        \item \textbf{Base Case $i = 0$ or $j = 0$}: 
+        \begin{itemize}
+            \item Suppose the source string is an empty string. Then the minimum edit distance is the number of $\mathbf{I}$ to create the target string. Therefore, the algorithm correctly return the minimum edit distance for $D[0, j]$ for all $j \geq 0$.
+            \item Suppose the target string is an empty string. Then the minimum edit distance is the number of $\mathbf{I}$ to delete all source string. Therefore, the algorithm correctly return the minimum edit distance for $D[i, 0]$ for all $j \geq 0$.
+        \end{itemize}
+        
+        \newpage
+        \item \textbf{General Case $i > 0$}: Consider the induction hypothesis $I(i', j')$ : "$D[i', j']$ yield the minimum edit distance to transform $X[i']$ to $Y[j']$", for $i' < i$ and $j' < j$.
+        \begin{itemize}
+            \item If $x[i] \neq y[j]$ and $\min \cbracket{D[i-1, j] + \mathbf{D}, D[i, j-1] + \mathbf{I}} = D[i-1, j] + \mathbf{D}$: Then, it is required to call $\mathbf{D}$, which add $\mathbf{D}$ additional cost.
+            \item If $x[i] \neq y[j]$ and $\min \cbracket{D[i-1, j] + \mathbf{D}, D[i, j-1] + \mathbf{I}} = D[i, j-1] + \mathbf{I}$: Then, it is required to call $\mathbf{I}$, which add $\mathbf{I}$ additional cost.
+            \item If $x[i] = y[j]$ Then, by the given relation $\mathbf{C} < \mathbf{D} + \mathbf{I}$, Then, it is required to call $\mathbf{C}$, which add $\mathbf{C}$ additional cost.
+        \end{itemize}
+        Therefore, $D[i, j]$ yield the minimum edit distance to transform $X[i]$ to $Y[j]$ for all $i, j$.\\
+        $I(i, j)$ is true for $0 \leq i \leq m, 0 \leq j \leq n$ 
+    \end{itemize}
+    \end{tcolorbox}
+    
+    \item Give documented pseudocode for an $O(mn)$ time algorithm to calculate $D[m, n]$. Your documentation should make clear what each section is doing.
+    \begin{tcolorbox}
+    \begin{minipage}{\linewidth}
+    \begin{algorithm}[H]
+        \caption{Minimum-Cost-Matrix($x, y, m, n$)}
+        \tcp{Initialize empty array}
+        \KwLet $D[0..m, 0..n]$ be an array of 0 for all element \\
+        \smallskip
+        \tcp{Initialize base case for recurrence}
+        $D[0, 0] = 0$ \\
+        \For{$i \gets 1$ \KwTo $m$}{
+            $D[i, 0] \gets i\mathbf{D}$ 
+        }
+        \For{$j \gets 1$ \KwTo $n$}{
+            $D[0, j] \gets j\mathbf{I}$ 
+        }
+        
+        \smallskip
+        \tcp{Get the recurrence for general case}
+        \For{$i \gets 0$ \KwTo $m$}{
+            \For{$j \gets 0$ \KwTo $n$}{
+                \eIf{$x[i] = y[j]$}{
+                    $D[i, j] = D[i-1, j-1] + \mathbf{C}$ 
+                }{
+                    $D[i, j] = \min \cbracket{D[i-1, j] + \mathbf{D}, D[i, j-1] + \mathbf{I}}$
+                }
+            }
+        }
+        \smallskip
+        \tcp{Return $D$}
+        \KwRet $D[1..m, 1..n]$
+    \end{algorithm}
+    \end{minipage}
+    \end{tcolorbox}
+
+    \item Explain why your algorithm runs in the required time.
+    \begin{tcolorbox}
+    The initialization takes $O(n+m)$, and the recurrence will iterate through $i \in [0, m]$ first and then $j \in [0, n]$. The total running time is $O((m+1)(n+1)) = O(mn)$.
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Greedy Algorithms}
+Give an $O(n \log n)$ algorithm for assigning location of $n$ files on a magnetic tapes that minimizes the expected time necessary to read a file. As input you are given the size of the files and the probability that each file will be accessed.
+
+Suppose $L[i]$ is the size of file $i$. The time $T_i$ it takes to read file $i$ is the sum of the sizes of the files located before file $i$ plus the size of file $i$. Suppose that you know that file $i$ will be accessed with probability $p_i$ and
+the ordering in which the files are on the tape. The expected (average) time to read a file will be:
+\begin{align*}
+    \sum_{i} p_i T_i
+\end{align*}
+
+Input is an array of $L[1..n]$ of the n files sizes and a list $p_1, p_2, \dots, p_n$ of the probability of accessing each file. The problem is to design an $O(n \log n)$ algorithm that outputs an optimal ordering of the files on the tape, i.e., an ordering that minimizes the expected time to read a file. 
+To do this answer the following questions:
+\begin{enumerate}
+    \item First assume that all the files are equally likely, i.e., for all files $p_i = 1/n$. Prove that in this case, inserting the files in order of increasing size gives an optimal solution.
+    
+    \begin{tcolorbox}
+    Define the average cost $C$ as: $C = \sum_i p_i T_i = \sum T_i/n$.
+    
+    Let the ordering of the files on the tape as $X[1..n] = \cbracket{\giventhat{i}{i \in [1, n] \land X[i] = X[j] \iff i = j}}$.
+    
+    We can define the recurrence relation of $T_i$ as: 
+    \begin{align*}
+        T[X[i]] &= T[X[i-1]] + L[X[i]]  \quad \text{for $i > 1$} \\
+        T[X[1]] &= L[X[1]]
+    \end{align*}
+    
+    The cost average cost is:
+    \begin{align*}
+        C = \sum_i T[i]/n = \sum_i T[X[i]]/n = \frac{1}{n} \sum_{i} (n-i+1) * L[X[i]]
+    \end{align*}
+    
+    Therefore, to minimize the average cost, we need $L[X[i]] \leq L[X[i+1]]$, as smaller $i$ yield larger weight in the sum. In other word, the ordering must be sorted in increasing order. One can use $O(n \log n)$ (stable) sorting algorithm such as merge sort to achieve this, by sorting $X[i]$ with key $L[X[i]]$.
+    \end{tcolorbox}
+    
+    \item Show that in the general case, sorting the files by size and inserting them on the tape in order of increasing size does not have to give an optimal solution.
+    
+    \begin{tcolorbox}
+    Suppose one file is short but will never or rarely get accessed, then it is better to store this file in the last entry rather than the first entry. 
+    
+    For example suppose $L[i] = [2, 4, 6]$ with probability $p_i = [0, 0.5, 0.5]$.
+    
+    If we store in sorted order, $X[i] = [1, 2, 3]$ the total cost is $C = 9$. If suppose we store $1$ at the end, $X[i] = [2, 3, 1]$ the total cost is: $C = 7$ which is smaller than previous ordering.  
+    \end{tcolorbox}
+    
+    \item Describe a rule that does solve the problem.
+    \begin{tcolorbox}
+    First, consider a case contrasting (a), where all $L[i] = 1$ for all $i$. Then, $X[i]$ must be sorted in descending order or the item that is least likely to be accessed placed in the last position. In other word, can propose to sort the output array by $1/p_i$ if the length of the all input is the same. 
+    
+    For general case, we can consider a greedy algorithm that combines both properties by sorting by $L[i]/p_i$. A correctness proof will be given in the following sub problem.
+    \end{tcolorbox}
+    
+    \item Provide a formal proof that the rule that you gave in part (c) outputs an optimal ordering.
+    \begin{tcolorbox}
+    Suppose we sort the array by the key of $L[X_i]/p_{X_i}$, such that $L[X_i]/p_{X_i} \leq L[X_j]/p_{X_j}$ for all $i < j$.  
+    Then consider $i, j$ where $L[i]/p_{i} < L[i]/p_{j}$. Then, there are two possible way to arrange these two elements:
+    \begin{align*}
+        C &= 
+        \begin{cases}
+            L[i]p_{i} + (L[i] + L[j]) p_{j} \\
+            L[j]p_{j} + (L[j] + L[i]) p_{i}
+        \end{cases} \\
+        &= 
+        \begin{cases}
+             p_{i}L[i] + p_{j}L[j] + L[i]p_{j} \quad (*) \\
+             p_{i}L[i] + p_{j}L[j] + L[j]p_{i}
+        \end{cases}
+    \end{align*}
+    Note that since $L[i]/p_{i} < L[i]/p_{j}$, then the minimum cost is the first case (marked 
+    with $(*)$). 
+    
+    Then, note that we can "combine" $L[i..j]/p_{i..j}$ to extend the prove.
+    
+    To prove the correctness, we can use this fact to check the first two sorted elements in the tape is optimal, and treat the first two elements as one element and compare it with the third element to prove the first three elements are optimal, and repeat this process to prove for all elements.
+    \end{tcolorbox}
+    
+    \item Explain how this gives you an $O(n \log n)$ greedy algorithm for solving the problem.
+    \begin{tcolorbox}
+    We need to sort the array by the key of $L[i]/p_i$. Suppose we use merge sort to sort the entries, the running time of the sorting is $O(n \log n)$ time. 
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Greedy Agorithms}
+Consider a long river, along which $n$ houses are located. You can think of this river as an x-axis; the house locations are given by their coordinates on this axis in a sorted order. The inputs are $x_1 < x_2 < \dots < x_n$: 
+
+Your company wants to place cell phone base stations along the river, so that every house is within 10 kilometers of one of the base stations.
+
+\begin{enumerate}
+    \item  Give an $O(n)$-time algorithm greedy algorithm that minimizes the number of base stations used.
+    
+    Provide both documented pseudocode and an explanation in words as to what it does.
+    
+    \begin{tcolorbox}
+        The algorithm can be described as ``Start from $x_1$, place a tower at maximum distance to the house at $x_1 + 10km$, then find the next house that is not in the coverage of any tower $x_i$, and place a tower in $x_i + 10$, and repeat until all houses are in coverage''
+        
+        \begin{minipage}{\linewidth}
+            \begin{algorithm}[H]
+                \caption{Place-Cell-Phone-Base($x_1 \dots x_n$, $r = 10km$)}
+                \KwLet $i \gets 1$, $count \gets 0$\\
+                \While{
+                    true
+                }{
+                    place a tower at $x_i + r$ \\
+                    $count \gets count + 1$ \\
+                    \If{$x_i + 2*r > x_n$}{
+                        \tcp{All towers is covered}
+                        \KwRet count
+                    }
+                    \For{$j \gets i$ \KwTo n}{
+                        \If{$x_j > x_i + 2*r$}{
+                            \tcp{Find next tower which is not covered}
+                            $i \gets j$ \\
+                            break
+                        }
+                    }
+                }
+            \end{algorithm}
+        \end{minipage}
+    \end{tcolorbox}
+    
+    \item   Provide a formal proof of your algorithm’s correctness, i.e., that it outputs a minimal size solution. 
+
+    (This must be formal. Make every assumption used explicit and justify every step in your argument. We will deduct points for ambiguity.)
+    
+    \begin{tcolorbox}[parbox=false]
+        Claim: Greedy Solution is optimal.
+        
+        Proof. Suppose greedy solution is different from OPT. 
+        Let $k$ be any number between $[1, n]$. Suppose OPT placement is the same as greedy for $i \leq k$. Suppose the next tower is placed differently at $x_t \neq x_i + r$, then there are different possibilities:
+        \begin{itemize}[noitemsep]
+            \item $x_t < x_i + r$, as all previous tower is already covered, moving the tower to $x_i + r$ is also optimal.
+            \item $x_t > x_i + r$, then $x_i$ is not covered, therefore this configuration is not permitted.
+        \end{itemize}
+        Therefore, we can move the next tower to $x_i + r$ and the solution is still optimal. By repeating this method until the last tower, the optimal solution will be the same as greedy solution. Therefore greedy solution is an optimal solution too.
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\newpage
+\begin{section}{Dynamic Programming}
+Now consider a modification of the previous problem. You still have a long river on which house locations are given by their coordinates on this axis in a sorted order. The inputs are still $x_1 < x_2 < \dots < x_n$.
+
+Your company still wants to place cell phone base stations along the river to cover every house. The difference is that you now have $t$ different types of base stations. A base station of type i costs $c_i$ dollars to install and can cover all houses within $k_i$ kilometers of its location. A base station of type $i$ located at $y$ is denoted by pair $(y, i)$.
+
+A house at location $x$ is covered by base station $(y, i)$, if $x \in [y - k_i, y + k_i]$.
+
+A set 
+\begin{align*}
+    S = \cbracket{(y_1, i_1), (y_2, i_2), \dots , (y_s, i_s)}
+\end{align*}
+is a cover of the input, if it covers all of the houses, i.e.,
+\begin{align*}
+    \cbracket{x_1, \dots, x_n} \subset \bigcup_{j=1}^s \sbracket{y_j - k_{i_j}, y_j + k_{i_j}}
+\end{align*}
+
+The \emph{cost} of a set of base stations is $cost(S) = \sum_{j=1}^s c_{i_j}$:
+Design an $O(tn)$ dynamic programming algorithm to find the cheapest (i.e., least expensive) cost of a set of base stations that covers all of the houses.
+
+\begin{enumerate}
+    \item Give the recurrence upon which your DP algorithm is based. Before stating the recurrence, define (using English and math symbols) the meaning of each entry. Don’t forget to completely specify the initial conditions of your recurrence relation.
+    
+    \begin{tcolorbox}[breakable]
+        Define the minimum cost of covering the first $i$ houses as $M[i]$. The recurrence relation for $M[i]$ is given by:
+        \begin{align*}
+            M[i] = \min \cbracket{c_{p_i} + M[j]} \quad \text{where $\cbracket{ j \geq j' \; \forall (j'< i) \land  x_j \not\subset [x_i - 2*k_{p_i}, x_i]}$}
+        \end{align*}
+        The initial condition is given by:
+        \begin{align*}
+            M[0] = 0 \quad x_0 = -\infty
+        \end{align*}
+        The recurrence relation can be described as: 
+        \begin{itemize}[noitemsep]
+            \item Initialize the recurrence by assuming there is a house at $x_0 = -\infty$ which does not have to be covered $M[0] = 0$.
+            \item For every next house located at $x_i$, assume a tower of type $p$ will be placed at $x_i - k_{p_i}$ which will cover $[x_i - 2*k_{i_j}, x_i]$.
+            \item Add the previous optimal cost of the last house that cannot be covered by the placed tower $M[j]$.
+            \item Add minimum cost for $M[i]$ to the table, which is the minimum of $c_{i_p} + M[j]$.
+            \item Repeat until the table is fully filled.
+        \end{itemize}
+        
+        Next, we define a relational matrix $R[i: p]$ which will indicate the farthest house after $i$ can be covered by using a single tower of type $p$.
+        \begin{align*}
+            R[i : p] = \min \cbracket{j \dots R[i+1]} \quad \text{where $j \leq j' \; \forall(j' < i) \land x_i - x_j \leq 2*k_p$}
+        \end{align*}
+        The initial condition is:
+        \begin{align*}
+            R[n : p] = n
+        \end{align*}
+        There are some important properties of the relational matrix, which are:
+        \begin{itemize}[noitemsep]
+            \item If the tower placed in $i$ cannot cover $j < i$, then it will not be able to cover $j' < j$.
+            \item If a tower placed in $i+1$ can cover $j < i$, then a tower at $i$ must be able to cover $j$ too.
+        \end{itemize}
+        These properties will be used later to initialize the $R$ matrix within $O(tn)$ time.
+    \end{tcolorbox}
+    
+    \item Explain how, after filling in your table, you can use the information in your table to solve the stated problem.
+    \begin{tcolorbox}
+        First, suppose we can fill the relational matrix $R[i, j : p]$ within the $O(tn)$ number of comparison. The $M[i]$ matrix can also be filled within $O(tn)$ time (will be elaborated later). 
+        
+        Then the minimum cost to cover all $n$ houses is $M[n]$.
+    \end{tcolorbox}
+    
+    \item Prove the correctness of the recurrence relation from part (a). (This must be formal. Make every assumption used explicit, and justify every step in your argument. We will deduct points for ambiguity.)
+    \begin{tcolorbox}
+        Prove of correctness for $M[i]$.
+        \begin{itemize}[noitemsep]
+            \item Base case $i = 0$: Correct by definition. 
+            \item Base case $i = 1$: Then $j = 0 \iff M[j] = 0$ for all $p$. The minimum cost to cover the first tower only is the minimum cost of the tower of type $p$. 
+            \item General case $i > 1$: Consider the strong induction hypothesis $I(i')$ that the $M$ matrix is correct for all $i' < i$. Then, the optimal cost to cover the first $i$ house $M[i]$. 
+            
+            The optimal cost to cover the first $i$ house is the minimum cost of covering the first $j$ house $M[j]$ (from induction hypothesis) and covering $j+1$ to $i$ house with a tower of type $p$. 
+            
+            Suppose the last tower placed is type $p$, which cover $j+1$'th to $i$'th house. Then, the optimal cost \emph{if the last tower is type $p$} is $M[j_p] + c_{p_i}$. As we have $t$ type of tower, the optimal cost is the minimum of $M[j_p] + c_{p_i}$ for all $p$.
+            
+            Thus the induction induction hypothesis is true for $I(i)$ for all $i > 0$ and the algorithm return the correct answer.
+        \end{itemize}
+    \end{tcolorbox}
+    
+    \newpage
+    \item Give documented psuedocode for your algorithm.
+    \begin{tcolorbox}[breakable]
+        Documented pseudocode for initializing $R[i : p]$ matrix, running time $O(tn)$
+        
+        \begin{algorithm}[H]
+            \caption{Initialize-Relational-Matrix($x_1..x_n, k_1..k_t$)}
+            \KwLet $R[1..n : 1..t]$ be a matrix of all zeros \\
+            \For{$p \gets 1$ \KwTo $t$}{
+                \For{$i \gets n$ \KwDownTo $1$}{
+                    \tcp{A tower must be able to cover one house}
+                    $R[i : p] \gets i$ \\
+                    \tcp{If house at i+1 can cover house j < i, then a house at i can cover it too.}
+                    $j \gets R[i+1 : p]$ \\
+                    \While{$j \geq 0$ \KwAnd $x_i - x_j \leq 2*k_p$}{
+                        \tcp{If i cannot cover a house at j < i, then any house before j cannot be covered too}
+                        $R[i : p] \gets j$ \\
+                        $j \gets j - 1$
+                    }
+                }
+            }
+            \KwRet $R[1..n : 1..t]$
+        \end{algorithm}
+        
+        Documented pseudocode for initializing $M[i]$ array and getting the optimal cost, running time $O(tn)$
+        
+        \begin{algorithm}[H]
+            \caption{Get-Optimal-Cost($x_1..x_n, k_1..k_t, c_1..c_t$)}
+            $R[1..n : 1..t] \gets \text{\texttt{Initialize-Relational-Matrix($x_1..x_n, k_1..k_t$)}}$ \\
+            \KwLet $M[0..n]$ be a matrix of all zeros \\
+            \For{$i \gets 1$ \KwTo $n$}{
+                $M[i] \gets \infty$ \\ 
+                \For{$p \gets 1$ \KwTo $t$}{
+                    \tcp{get the previous house which cannot be covered by i for using p tower}
+                    $j \gets R[i : p] - 1$ \\
+                    \tcp{the cost is the sum of the cost to cover j+1 to i plus the optimal cost to cover j towers}
+                    $t \gets c_p + M[j]$ \\
+                    \If{$t < M[i]$}{
+                        $M[i] \gets t$
+                    }
+                }
+            }
+            \tcp{return the optimal cost for all houses}
+            \KwRet $M[n]$
+        \end{algorithm}
+    \end{tcolorbox}
+    
+    \newpage
+    \item Explain why your algorithm runs in the required time.
+    \begin{tcolorbox}
+        The algorithm can be broken down into two parts. The first one is initializing the relational array $R[1..n : 1..t]$, which takes $O(tn)$ time. There are three loop blocks inside the algorithm, but actually the the while loop inside only do $O(2n)$ operations in total for all $i$ iterations because the properties we mentioned in part (a). Therefore, the total running time for initializing $R[1..n : 1..t]$ is $O(t(n + 2n)) = O(tn)$
+        
+        The second one is initializing the minimum cost array $M[1..n]$ which also takes $O(tn)$ time. There are two loop blocks in the algorithm so the total running time must be $O(tn)$. 
+        
+        Therefore the total running time of the algorithm is also $O(tn)$.
+    \end{tcolorbox}
+\end{enumerate}
+\end{section}
+
+\end{document}
+
+
