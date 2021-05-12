@@ -1,5 +1,5 @@
 % \documentclass{article}
-\ProvidesClass{HW}
+\ProvidesClass{../HW}
 \usepackage[utf8]{inputenc}
 \usepackage{import}
 \usepackage{amsmath, mathtools}
@@ -8,7 +8,7 @@
 \usepackage{tabto}
 \usepackage[margin=1in]{geometry}
 \usepackage[inline,shortlabels]{enumitem}
-\usepackage[ruled]{algorithm2e}
+\usepackage[ruled, linesnumbered]{algorithm2e}
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{placeins}
 \RequirePackage{environ}
@@ -16,6 +16,9 @@
 \usepackage{float}
 \usepackage[most]{tcolorbox}
 \tcbset{parbox=false}
+\usepackage{multicol}
+\usepackage{textcomp}
+\usepackage{tabularx}
 
 \parindent 0in
 \parskip 1em
@@ -35,7 +38,7 @@
 \title{Insert Title Here}
 \author{TANUWIJAYA, Randy Stefan \\ (20582731) \\ rstanuwijaya@connect.ust.hk}
 \affil{Department of Physics - HKUST \\ Department of Computer Science and Engineering - HKUST}
-\date{\today}
+\date{April 10, 2021}
 
 % \tagthis command for align* environment
 \newcommand\tagthis{\addtocounter{equation}{1}\tag{\theequation}}
@@ -82,6 +85,9 @@
 \setenumerate[2]{label=(\roman*)}
 
 \SetKw{KwAnd}{and}
+\SetKw{KwTrue}{true}
+\SetKw{KwFalse}{false}
+\SetKw{KwContinue}{continue}
 \SetKw{KwDo}{do}
 \SetKw{KwSwap}{swap}
 \SetKw{KwWith}{with}
